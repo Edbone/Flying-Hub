@@ -61,7 +61,7 @@ try {
 
         <div class="photo-panel">
           {images.length > 0 ? (
-            images.slice(0, 25).map((img, index) => (
+            images.slice(0, 35).map((img, index) => (
               <img
                 class={index === 0 ? "active" : ""}
                 src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1000/${img.public_id}.${img.format}`}
