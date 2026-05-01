@@ -1,0 +1,386 @@
+---
+const cloudName = "dnjzeouq5";
+
+let images = [];
+
+try {
+  const res = await fetch(
+    `https://res.cloudinary.com/${cloudName}/image/list/aviation.json`
+  );
+  const data = await res.json();
+
+  images = (data.resources ?? []).sort((a, b) => b.version - a.version);
+} catch (e) {
+  images = [];
+}
+---
+
+<html lang="en">
+  <head>
+    <title>Photo Library | Eddie Jackson Aviation</title>
+    <meta
+      name="description"
+      content="Aviation photo library featuring training, aircraft, and flying milestones by Eddie Jackson."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="/">Eddie Jackson</a>
+
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/photos" aria-current="page">Photos</a>
+          <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/Pilot+Hub">Notes</a>
+          <a href="/flight-instruction">Instruction</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Photo Library</p>
+        <h1>Flying Career</h1>
+        <p class="hero-text">
+          A collection of photos from training, aircraft, airport life, and
+          milestones along the way.
+        </p>
+      </section>
+
+      {images.length > 0 ? (
+        <section class="gallery" aria-label="Aviation photo gallery">
+          {images.map((img) => (
+            <article class="photo-card">
+              <button
+                class="photo-button"
+                type="button"
+                data-src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1600/${img.public_id}.${img.format}`}
+                data-alt={img.public_id.replaceAll("_", " ")}
+                aria-label={`Open photo: ${img.public_id.replaceAll("_", " ")}`}
+              >
+                <img
+                  src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_900/${img.public_id}.${img.format}`}
+                  alt={img.public_id.replaceAll("_", " ")}
+                  loading="lazy"
+                />
+              </button>
+            </article>
+          ))}
+        </section>
+      ) : (
+        <section class="empty-state">
+          <h2>No photos available</h2>
+          <p>Try again later or check that your Cloudinary image list is loading correctly.</p>
+        </section>
+      )}
+
+      <div id="modal" class="modal" aria-hidden="true">
+        <button id="modal-close" class="modal-close" type="button" aria-label="Close image">
+          ×
+        </button>
+        <img id="modal-img" alt="" />
+      </div>
+    </main>
+
+    <script>
+      const modal = document.getElementById("modal");
+      const modalImg = document.getElementById("modal-img");
+      const modalClose = document.getElementById("modal-close");
+      const buttons = document.querySelectorAll(".photo-button");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          modal.style.display = "flex";
+          modal.setAttribute("aria-hidden", "false");
+          modalImg.src = button.dataset.src;
+          modalImg.alt = button.dataset.alt || "";
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      function closeModal() {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+        modalImg.src = "";
+        document.body.style.overflow = "";
+      }
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+
+      modalClose.addEventListener("click", closeModal);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.style.display === "flex") {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg: #e7edf3;
+    --text: #101820;
+    --muted: #5e6b76;
+    --blue: #2f7cc4;
+    --blue-dark: #155b98;
+    --yellow: #f5bf3d;
+    --card: #ffffff;
+    --line: rgba(16, 24, 32, 0.12);
+    --shadow: 0 18px 45px rgba(20, 35, 50, 0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(47, 124, 196, 0.2), transparent 32rem),
+      linear-gradient(135deg, #eef3f7 0%, #d5e1eb 45%, #8aa8c4 100%);
+    min-height: 100vh;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(231, 237, 243, 0.9);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    color: var(--text);
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    font-size: 0.94rem;
+    font-weight: 650;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current="page"] {
+    color: var(--blue-dark);
+  }
+
+  main {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 56px 22px 90px;
+  }
+
+  .hero {
+    margin-bottom: 34px;
+  }
+
+  .eyebrow {
+    width: fit-content;
+    margin: 0 0 18px;
+    padding: 8px 12px;
+    border-left: 4px solid var(--yellow);
+    background: rgba(255, 255, 255, 0.62);
+    color: var(--blue-dark);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(3rem, 7vw, 5.3rem);
+    line-height: 0.95;
+    letter-spacing: -0.07em;
+    color: var(--text);
+  }
+
+  .hero-text {
+    max-width: 640px;
+    margin: 18px 0 0;
+    color: #344555;
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+
+  .gallery {
+    columns: 3;
+    column-gap: 18px;
+    margin-top: 24px;
+  }
+
+  .photo-card {
+    break-inside: avoid;
+    margin-bottom: 18px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 24px rgba(20, 35, 50, 0.08);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(47, 124, 196, 0.25);
+    box-shadow: 0 20px 34px rgba(20, 35, 50, 0.14);
+  }
+
+  .photo-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .photo-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  .empty-state {
+    margin-top: 28px;
+    padding: 32px;
+    border-radius: 18px;
+    background: white;
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 28px rgba(20, 35, 50, 0.08);
+  }
+
+  .empty-state h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+  }
+
+  .empty-state p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding: 24px;
+    background: rgba(9, 14, 20, 0.88);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal img {
+    max-width: min(1200px, 92vw);
+    max-height: 88vh;
+    border-radius: 14px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: scale(1.04);
+  }
+
+  @media (max-width: 950px) {
+    .gallery {
+      columns: 2;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .nav {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .nav-links {
+      gap: 10px 16px;
+    }
+
+    main {
+      padding-top: 42px;
+    }
+
+    .gallery {
+      columns: 1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .modal {
+      padding: 16px;
+    }
+
+    .modal-close {
+      top: 12px;
+      right: 12px;
+    }
+  }
+</style>
