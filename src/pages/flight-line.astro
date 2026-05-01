@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Line Status</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      --bg: #05080d;
+      --paper: rgba(9, 16, 25, 0.84);
+      --text: #eef6ff;
+      --muted: #a8b8c8;
+      --line: rgba(238, 246, 255, 0.14);
+      --blue: #1e73be;
+      --blue-dark: #0b3f73;
+      --ink: #f7fbff;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+      --panel: rgba(9, 16, 25, 0.84);
+      --panelBorder: rgba(238, 246, 255, 0.14);
+      --ok: rgba(34,197,94,.18);
+      --okBorder: rgba(34,197,94,.38);
+      --bad: rgba(239,68,68,.18);
+      --badBorder: rgba(239,68,68,.38);
+      --textMain: #eef6ff;
+      --textSoft: #a8b8c8;
+      --cardBg: rgba(255,255,255,.06);
+      --cardBorder: rgba(238,246,255,.14);
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
+        linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
+        url("/topobackground.png");
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(5, 8, 13, 0.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a[aria-current="page"] {
+      color: var(--blue);
+    }
+
+    .glass-card{
+      background: var(--panel);
+      border: 1px solid var(--panelBorder);
+      box-shadow: 0 14px 34px rgba(0,0,0,.18);
+      backdrop-filter: blur(18px);
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--textSoft);
+    }
+
+    .pill-ok {
+      border: 1px solid rgba(34,197,94,.32);
+      background: rgba(34,197,94,.14);
+      color: #dfffea;
+    }
+
+    .pill-bad {
+      border: 1px solid rgba(239,68,68,.32);
+      background: rgba(239,68,68,.14);
+      color: #ffe1e1;
+    }
+
+    .mono { font-variant-numeric: tabular-nums; }
+
+    .compact-shell {
+      position: relative;
+      max-width: 1180px;
+      min-height: calc(100vh - 73px);
+      margin: 0 auto;
+      padding: 18px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .compact-main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 8px;
+    }
+
+    .weather-grid-compact {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .table-fit {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .table-fit-inner {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .table-head {
+      min-height: 34px;
+      align-items: center;
+    }
+
+    .tight-card {
+      padding: 8px 10px;
+    }
+
+    .tight-label {
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--textSoft);
+    }
+
+    .tight-value {
+      margin-top: 4px;
+      font-size: 16px;
+      line-height: 1.1;
+      font-weight: 800;
+      color: var(--textMain);
+    }
+
+    .title-text {
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: 0;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .status-wrap {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      height: 100%;
+      gap: 0;
+      background: rgba(255,255,255,.035);
+    }
+
+    :global(.group) {
+      display: grid;
+      grid-template-columns: 34% 66%;
+    }
+
+    :global(.group + .group) {
+      border-top: 1px solid rgba(238,246,255,.1);
+    }
+
+    :global(.profile-cell) {
+      background: rgba(255,255,255,.055);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 800;
+      padding: 12px;
+      border-right: 1px solid rgba(238,246,255,.1);
+    }
+
+    :global(.group-rows) {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: rgba(255,255,255,.02);
+    }
+
+    :global(.status-row) {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      min-height: 41px;
+      align-items: center;
+      background: transparent;
+      color: var(--textMain);
+      font-weight: 800;
+    }
+
+    :global(.status-row + .status-row) {
+      border-top: 1px solid rgba(238,246,255,.1);
+    }
+
+    :global(.condition-cell),
+    :global(.status-cell) {
+      padding: 0 12px;
+      font-size: 14px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    :global(.condition-cell) {
+      justify-content: flex-start;
+      background: rgba(255,255,255,.03);
+      color: var(--textMain);
+      border-right: 1px solid rgba(238,246,255,.08);
+    }
+
+    :global(.status-cell) {
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      height: 100%;
+      border-radius: 0;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(238,246,255,.14);
+      letter-spacing: .04em;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    :global(.status-cell.open) {
+      color: #dcffe8;
+      border-color: rgba(34,197,94,.72);
+      background: rgba(34,197,94,.08);
+      box-shadow:
+        0 0 0 1px rgba(34,197,94,.28),
+        0 0 22px rgba(34,197,94,.34),
+        inset 0 0 24px rgba(34,197,94,.16);
+    }
+
+    :global(.status-cell.hold) {
+      color: #ffe2e2;
+      border-color: rgba(239,68,68,.78);
+      background: rgba(239,68,68,.08);
+      box-shadow:
+        0 0 0 1px rgba(239,68,68,.3),
+        0 0 22px rgba(239,68,68,.36),
+        inset 0 0 24px rgba(239,68,68,.16);
+    }
+
+    ::-webkit-scrollbar { height: 10px; width: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(238,246,255,.22); border-radius: 999px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,.06); }
+
+    @media (max-width: 1200px) {
+      html, body { overflow: auto; }
+
+      .weather-grid-compact {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .compact-shell {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .nav-links {
+        width: 100%;
+        gap: 10px 16px;
+      }
+
+      .compact-shell {
+        padding-inline: 18px;
+      }
+
+      .weather-grid-compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: { 'sim-yellow': '#eab308', 'sim-blue': '#2563eb' }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="brand" href="/">EKAviates</a>
+
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/photos">Photos</a>
+        <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">Notes</a>
+        <a href="/flight-instruction">Instruction</a>
+        <a href="/flight-line" aria-current="page">Flight Line</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="compact-shell">
+
+    <main class="compact-main">
+      <section class="glass-card rounded-2xl p-2 sm:p-3">
+        <div class="title-text">Flight Line Status</div>
+
+        <div id="todayLine"
+             class="text-xs sm:text-sm mono mb-2"
+             style="color: var(--textSoft);">
+          —
+        </div>
+
+        <div class="weather-grid-compact">
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Airport</div>
+            <div id="airportCode" class="tight-value text">KORL</div>
+          </div>
+
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Best Runway</div>
+            <div id="bestRunway" class="tight-value">—</div>
+          </div>
+
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Wind</div>
+            <div id="windSummary" class="tight-value">—</div>
+          </div>
+
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Visibility</div>
+            <div id="visibility" class="tight-value">—</div>
+          </div>
+
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Ceiling</div>
+            <div id="ceiling" class="tight-value">—</div>
+          </div>
+
+          <div class="rounded-xl tight-card" style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+            <div class="tight-label">Crosswind</div>
+            <div id="crosswind" class="tight-value">—</div>
+          </div>
+        </div>
+
+        <div class="mt-2 rounded-xl px-3 py-2"
+          style="background: var(--cardBg); border: 1px solid var(--cardBorder);">
+          <div class="tight-label">METAR</div>
+          <div id="rawMetar" class="mt-1 text-sm font-semibold break-words leading-snug">Loading...</div>
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-1.5">
+          <span id="tafPill" class="pill text-xs px-2 py-0.5 rounded-full">TAF status</span>
+          <span id="sigmetPill" class="pill text-xs px-2 py-0.5 rounded-full">SIGMET status</span>
+          <span id="updatedPill" class="pill text-xs px-2 py-0.5 rounded-full mono">Updated —</span>
+        </div>
+      </section>
+
+      <section class="glass-card rounded-2xl p-2 sm:p-3 table-fit">
+        <div class="table-fit-inner min-w-[760px]">
+          <div class="grid grid-cols-3 gap-0 rounded-t-xl overflow-hidden table-head"
+               style="grid-template-columns: 34% 33% 33%; background: rgba(255,255,255,.06); border: 1px solid var(--line);">
+            <div class="px-3 py-2 text-xs font-extrabold uppercase tracking-wider">Flight Profile</div>
+            <div class="px-3 py-2 text-xs font-extrabold uppercase tracking-wider">Conditions</div>
+            <div class="px-3 py-2 text-xs font-extrabold uppercase tracking-wider">Status</div>
+          </div>
+
+          <div id="statusTable"
+               class="status-wrap rounded-b-xl overflow-hidden"
+               style="border: 1px solid var(--line); border-top: 0;">
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const CONFIG = {
+  airport: "KORL",
+  tafAirport: "KMCO",
+  refreshMs: 5 * 60 * 1000,
+  airportLat: 28.5455,
+  airportLon: -81.3329,
+  proxyBase: "https://purple-sun-777e.bocajack03.workers.dev"
+};
+
+const RUNWAYS = {
+  "07": 67,
+  "25": 247,
+  "13": 131,
+  "31": 311
+};
+
+const WEATHER = {
+  airport: CONFIG.airport,
+  tafAirport: CONFIG.tafAirport,
+  rawMetar: "Loading...",
+  receiptTime: new Date().toISOString(),
+  windDirection: 0,
+  windSpeed: 0,
+  windGust: 0,
+  visibility: 99,
+  clouds: [],
+  tafHasGustsNextHour: false,
+  convectiveSigmetActive: false,
+  sigmetMatches: []
+};
+
+const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const pad2 = (n) => String(n).padStart(2, "0");
+
+function toYMD(d) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function getFormattedHeaderDate() {
+  const now = new Date();
+  return `${weekdays[now.getDay()]} • ${toYMD(now)}`;
+}
+
+function formatLocalTime(isoString) {
+  const d = new Date(isoString);
+  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
+function safeNumber(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function makeStatuses() {
+  return {
+    dual: { trafficPattern: true, practiceArea: true, crossCountry: true, ifr: true },
+    solo: { trafficPattern: true, practiceArea: true, crossCountry: true },
+    renter: { trafficPattern: true, practiceArea: true, crossCountry: true, ifr: true },
+    timeBuild: { trafficPattern: true, practiceArea: true, crossCountry: true, ifr: true }
+  };
+}
+
+function calculateRunwayWindComponents(windDirection, windSpeed) {
+  let bestRunway = "--";
+  let bestHeadwind = -Infinity;
+  let bestCrosswind = 0;
+
+  for (const [runway, heading] of Object.entries(RUNWAYS)) {
+    let angle = Math.abs(windDirection - heading);
+    if (angle > 180) angle = 360 - angle;
+
+    const headwind = windSpeed * Math.cos((angle * Math.PI) / 180);
+    const crosswind = Math.abs(windSpeed * Math.sin((angle * Math.PI) / 180));
+
+    if (headwind > bestHeadwind) {
+      bestHeadwind = headwind;
+      bestCrosswind = crosswind;
+      bestRunway = runway;
+    }
+  }
+
+  return {
+    bestRunway,
+    headwind: Math.round(bestHeadwind * 10) / 10,
+    crosswind: Math.round(bestCrosswind * 10) / 10
+  };
+}
+
+function getLowestCeiling(clouds) {
+  let lowest = Infinity;
+  for (const layer of clouds || []) {
+    const cover = (layer.cover || "").toUpperCase();
+    const base = Number(layer.base);
+    if ((cover === "BKN" || cover === "OVC") && Number.isFinite(base) && base < lowest) {
+      lowest = base;
+    }
+  }
+  return Number.isFinite(lowest) ? lowest : null;
+}
+
+function setAllNoGo(statuses) {
+  statuses.dual.trafficPattern = false;
+  statuses.dual.practiceArea = false;
+  statuses.dual.crossCountry = false;
+  statuses.dual.ifr = false;
+
+  statuses.solo.trafficPattern = false;
+  statuses.solo.practiceArea = false;
+  statuses.solo.crossCountry = false;
+
+  statuses.renter.trafficPattern = false;
+  statuses.renter.practiceArea = false;
+  statuses.renter.crossCountry = false;
+  statuses.renter.ifr = false;
+
+  statuses.timeBuild.trafficPattern = false;
+  statuses.timeBuild.practiceArea = false;
+  statuses.timeBuild.crossCountry = false;
+  statuses.timeBuild.ifr = false;
+}
+
+function applyFlightRules(weather) {
+  const statuses = makeStatuses();
+
+  const windDirection = weather.windDirection ?? 0;
+  const windSpeed = weather.windSpeed ?? 0;
+  const windGust = weather.windGust ?? windSpeed;
+  const visibility = Number(weather.visibility ?? 99);
+  const lowestCeiling = getLowestCeiling(weather.clouds);
+  const windCalc = calculateRunwayWindComponents(windDirection, windSpeed);
+
+  if (windGust >= 30) setAllNoGo(statuses);
+
+  if (windGust > windSpeed) {
+    statuses.solo.trafficPattern = false;
+    statuses.solo.practiceArea = false;
+    statuses.solo.crossCountry = false;
+  }
+
+  if (weather.tafHasGustsNextHour) {
+    statuses.solo.trafficPattern = false;
+    statuses.solo.practiceArea = false;
+    statuses.solo.crossCountry = false;
+  }
+
+  if (windSpeed > 25 || windGust > 25) {
+    statuses.dual.trafficPattern = false;
+    statuses.dual.practiceArea = false;
+    statuses.dual.crossCountry = false;
+    statuses.dual.ifr = false;
+
+    statuses.renter.trafficPattern = false;
+    statuses.renter.practiceArea = false;
+    statuses.renter.crossCountry = false;
+    statuses.renter.ifr = false;
+
+    statuses.timeBuild.trafficPattern = false;
+    statuses.timeBuild.practiceArea = false;
+    statuses.timeBuild.crossCountry = false;
+    statuses.timeBuild.ifr = false;
+  }
+
+  if (windSpeed > 20 || windGust > 20) {
+    statuses.solo.trafficPattern = false;
+    statuses.solo.practiceArea = false;
+    statuses.solo.crossCountry = false;
+  }
+
+  if (windCalc.crosswind > 15) {
+    statuses.dual.trafficPattern = false;
+    statuses.dual.practiceArea = false;
+    statuses.dual.crossCountry = false;
+    statuses.dual.ifr = false;
+
+    statuses.renter.trafficPattern = false;
+    statuses.renter.practiceArea = false;
+    statuses.renter.crossCountry = false;
+    statuses.renter.ifr = false;
+
+    statuses.timeBuild.trafficPattern = false;
+    statuses.timeBuild.practiceArea = false;
+    statuses.timeBuild.crossCountry = false;
+    statuses.timeBuild.ifr = false;
+  }
+
+  if (windCalc.crosswind > 10) {
+    statuses.solo.trafficPattern = false;
+    statuses.solo.practiceArea = false;
+    statuses.solo.crossCountry = false;
+  }
+
+  if (visibility < 1) statuses.dual.ifr = false;
+
+  if (visibility < 3) {
+    statuses.dual.trafficPattern = false;
+    statuses.solo.trafficPattern = false;
+    statuses.renter.trafficPattern = false;
+    statuses.timeBuild.trafficPattern = false;
+  }
+
+  if (visibility < 5) {
+    statuses.dual.practiceArea = false;
+    statuses.solo.practiceArea = false;
+    statuses.renter.practiceArea = false;
+    statuses.timeBuild.practiceArea = false;
+  }
+
+  if (visibility < 6) {
+    statuses.dual.crossCountry = false;
+    statuses.solo.crossCountry = false;
+    statuses.renter.crossCountry = false;
+    statuses.timeBuild.crossCountry = false;
+  }
+
+  if (lowestCeiling !== null) {
+    if (lowestCeiling < 1600) {
+      statuses.dual.trafficPattern = false;
+      statuses.solo.trafficPattern = false;
+      statuses.renter.trafficPattern = false;
+      statuses.timeBuild.trafficPattern = false;
+    }
+
+    if (lowestCeiling < 2000) {
+      statuses.dual.practiceArea = false;
+      statuses.solo.practiceArea = false;
+      statuses.renter.practiceArea = false;
+      statuses.timeBuild.practiceArea = false;
+      statuses.dual.crossCountry = false;
+      statuses.timeBuild.crossCountry = false;
+    }
+
+    if (lowestCeiling < 3000) statuses.renter.crossCountry = false;
+    if (lowestCeiling < 4000) statuses.solo.crossCountry = false;
+    if (lowestCeiling < 467) statuses.dual.ifr = false;
+  }
+
+  if (weather.convectiveSigmetActive) setAllNoGo(statuses);
+
+  return { statuses, windCalc, lowestCeiling };
+}
+
+function renderStatusRow(condition, isOpen) {
+  return `
+    <div class="status-row">
+      <div class="condition-cell">${condition}</div>
+      <div class="status-cell ${isOpen ? "open" : "hold"}">${isOpen ? "OPEN" : "HOLD"}</div>
+    </div>
+  `;
+}
+
+function renderGroup(profile, rows, sizeClass) {
+  return `
+    <div class="group ${sizeClass}">
+      <div class="profile-cell">${profile}</div>
+      <div class="group-rows">
+        ${rows.join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderTable(statuses) {
+  const dualGroup = renderGroup("DUAL", [
+    renderStatusRow("TRAFFIC PATTERN", statuses.dual.trafficPattern),
+    renderStatusRow("PRACTICE AREA", statuses.dual.practiceArea),
+    renderStatusRow("CROSS COUNTRY", statuses.dual.crossCountry),
+    renderStatusRow("IFR", statuses.dual.ifr)
+  ], "group-4");
+
+  const soloGroup = renderGroup("SOLO", [
+    renderStatusRow("TRAFFIC PATTERN", statuses.solo.trafficPattern),
+    renderStatusRow("PRACTICE AREA", statuses.solo.practiceArea),
+    renderStatusRow("CROSS COUNTRY", statuses.solo.crossCountry)
+  ], "group-3");
+
+  const renterGroup = renderGroup("RENTER / TIMEBUILDER", [
+    renderStatusRow("TRAFFIC PATTERN", statuses.renter.trafficPattern),
+    renderStatusRow("PRACTICE AREA", statuses.renter.practiceArea),
+    renderStatusRow("CROSS COUNTRY", statuses.renter.crossCountry)
+  ], "group-3");
+
+  document.getElementById("statusTable").innerHTML = dualGroup + soloGroup + renterGroup;
+}
+
+function pickFirstRecord(json) {
+  if (Array.isArray(json)) return json[0] || null;
+  if (json && Array.isArray(json.data)) return json.data[0] || null;
+  return json || null;
+}
+
+function normalizeClouds(metar) {
+  const rawClouds = metar?.clouds || [];
+  if (!Array.isArray(rawClouds)) return [];
+
+  return rawClouds.map(layer => ({
+    cover: layer.cover || layer.type || "",
+    base: safeNumber(layer.base ?? layer.altitude ?? layer.height, NaN)
+  }));
+}
+
+function getMetarWindDirection(metar) {
+  const raw = metar?.wdir ?? metar?.windDirection ?? metar?.wind_dir_degrees ?? 0;
+  if (raw === "VRB") return 0;
+  return safeNumber(raw, 0);
+}
+
+function getMetarWindSpeed(metar) {
+  return safeNumber(metar?.wspd ?? metar?.windSpeed ?? metar?.wind_speed_kt, 0);
+}
+
+function getMetarWindGust(metar) {
+  const speed = getMetarWindSpeed(metar);
+  return safeNumber(metar?.wgst ?? metar?.windGust ?? metar?.wind_gust_kt, speed);
+}
+
+function getMetarVisibility(metar) {
+  const raw = metar?.visib ?? metar?.visibility ?? metar?.visibility_statute_mi;
+  if (raw === "10+") return 10;
+  return safeNumber(raw, 99);
+}
+
+function getRawMetar(metar) {
+  return metar?.rawOb || metar?.raw_text || metar?.raw || "No METAR available";
+}
+
+function getReceiptTime(metar) {
+  const raw = metar?.receiptTime || metar?.observationTime;
+  if (raw) return raw;
+
+  if (typeof metar?.obsTime === "number") {
+    return new Date(metar.obsTime * 1000).toISOString();
+  }
+
+  return new Date().toISOString();
+}
+
+function tafHasGustsNextHour(taf) {
+  if (!taf) return false;
+
+  const now = new Date();
+  const currentHour = now.getUTCHours();
+  const currentDay = now.getUTCDate();
+
+  const periods = []
+    .concat(Array.isArray(taf.fcsts) ? taf.fcsts : [])
+    .concat(Array.isArray(taf.forecast) ? taf.forecast : []);
+
+  for (const item of periods) {
+    const startRaw =
+      item.fcst_time_from ||
+      item.startTime ||
+      item.valid_from ||
+      item.from ||
+      item.timeFrom ||
+      item.start_time;
+
+    const endRaw =
+      item.fcst_time_to ||
+      item.endTime ||
+      item.valid_to ||
+      item.to ||
+      item.timeTo ||
+      item.end_time;
+
+    const start = startRaw ? new Date(startRaw).getTime() : NaN;
+    const end = endRaw ? new Date(endRaw).getTime() : NaN;
+
+    const gust =
+      Number(item.wgst) ||
+      Number(item.wind_gust_kt) ||
+      Number(item.wgust) ||
+      Number(item.gust) ||
+      0;
+
+    if (
+      Number.isFinite(start) &&
+      Number.isFinite(end) &&
+      end > now.getTime() &&
+      start < now.getTime() + 60 * 60 * 1000 &&
+      gust > 0
+    ) {
+      return true;
+    }
+  }
+
+  const raw = taf.rawTAF || taf.raw_text || taf.raw || "";
+  if (!raw) return false;
+
+  return /(?:\s|^)\d{3}\d{2,3}G\d{2,3}KT(?:\s|$)/.test(raw);
+}
+
+function pointInRing(point, ring) {
+  const [x, y] = point;
+  let inside = false;
+
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+
+    const intersect =
+      ((yi > y) !== (yj > y)) &&
+      (x < ((xj - xi) * (y - yi)) / ((yj - yi) || 1e-12) + xi);
+
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+}
+
+function pointInPolygon(point, polygonCoords) {
+  if (!polygonCoords?.length) return false;
+  if (!pointInRing(point, polygonCoords[0])) return false;
+
+  for (let i = 1; i < polygonCoords.length; i++) {
+    if (pointInRing(point, polygonCoords[i])) return false;
+  }
+
+  return true;
+}
+
+function pointInGeometry(point, geometry) {
+  if (!geometry) return false;
+
+  if (geometry.type === "Polygon") {
+    return pointInPolygon(point, geometry.coordinates);
+  }
+
+  if (geometry.type === "MultiPolygon") {
+    return geometry.coordinates.some(poly => pointInPolygon(point, poly));
+  }
+
+  return false;
+}
+
+function parseTime(value) {
+  if (!value) return NaN;
+  const t = new Date(value).getTime();
+  return Number.isFinite(t) ? t : NaN;
+}
+
+function sigmetIsActive(feature) {
+  const p = feature?.properties || {};
+  const now = Date.now();
+
+  const start =
+    parseTime(p.validTimeFrom) ||
+    parseTime(p.valid_from) ||
+    parseTime(p.startTime) ||
+    parseTime(p.issuetime) ||
+    NaN;
+
+  const end =
+    parseTime(p.validTimeTo) ||
+    parseTime(p.valid_to) ||
+    parseTime(p.endTime) ||
+    parseTime(p.expireTime) ||
+    NaN;
+
+  if (Number.isFinite(start) && now < start) return false;
+  if (Number.isFinite(end) && now > end) return false;
+
+  return true;
+}
+
+function getSigmetLabel(feature) {
+  const p = feature?.properties || {};
+  return p.rawAirSigmet || p.rawSigmet || p.raw_text || p.hazard || p.sequence || "SIGMET";
+}
+
+async function fetchJson(url) {
+  const res = await fetch(url, {
+    headers: { "Accept": "application/json" },
+    cache: "no-store"
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} loading ${url}`);
+  }
+
+  return res.json();
+}
+
+async function fetchViaProxy(pathAndQuery) {
+  const url = `${CONFIG.proxyBase}${pathAndQuery}`;
+  return fetchJson(url);
+}
+
+function sigmetHitsAirport(geojson) {
+  const features = Array.isArray(geojson?.features) ? geojson.features : [];
+  const airportPoint = [CONFIG.airportLon, CONFIG.airportLat];
+
+  const matches = features.filter(feature => {
+    if (!sigmetIsActive(feature)) return false;
+    return pointInGeometry(airportPoint, feature.geometry);
+  });
+
+  return {
+    active: matches.length > 0,
+    matches: matches.map(getSigmetLabel)
+  };
+}
+
+async function loadWeather() {
+  const [metarJson, tafJson, sigmetGeoJson] = await Promise.all([
+    fetchViaProxy(`/api/data/metar?ids=${encodeURIComponent(CONFIG.airport)}&format=json`),
+    fetchViaProxy(`/api/data/taf?ids=${encodeURIComponent(CONFIG.tafAirport)}&format=json`),
+    fetchViaProxy(`/api/data/airsigmet?format=geojson`)
+  ]);
+
+  const metar = pickFirstRecord(metarJson);
+  const taf = pickFirstRecord(tafJson);
+
+  if (!metar) {
+    throw new Error(`No METAR returned for ${CONFIG.airport}`);
+  }
+
+  const sigmetResult = sigmetHitsAirport(sigmetGeoJson);
+
+  WEATHER.airport = CONFIG.airport;
+  WEATHER.tafAirport = CONFIG.tafAirport;
+  WEATHER.rawMetar = getRawMetar(metar);
+  WEATHER.receiptTime = getReceiptTime(metar);
+  WEATHER.windDirection = getMetarWindDirection(metar);
+  WEATHER.windSpeed = getMetarWindSpeed(metar);
+  WEATHER.windGust = getMetarWindGust(metar);
+  WEATHER.visibility = getMetarVisibility(metar);
+  WEATHER.clouds = normalizeClouds(metar);
+  WEATHER.tafHasGustsNextHour = tafHasGustsNextHour(taf);
+  WEATHER.convectiveSigmetActive = sigmetResult.active;
+  WEATHER.sigmetMatches = sigmetResult.matches;
+}
+
+function render() {
+  document.getElementById("todayLine").textContent = getFormattedHeaderDate();
+
+  const { statuses, windCalc, lowestCeiling } = applyFlightRules(WEATHER);
+
+  document.getElementById("airportCode").textContent = WEATHER.airport;
+  document.getElementById("bestRunway").textContent = windCalc.bestRunway;
+  document.getElementById("windSummary").textContent =
+    `${WEATHER.windDirection}° @ ${WEATHER.windSpeed}kt` +
+    (WEATHER.windGust > WEATHER.windSpeed ? ` G${WEATHER.windGust}` : "");
+  document.getElementById("visibility").textContent = `${WEATHER.visibility} SM`;
+  document.getElementById("ceiling").textContent = lowestCeiling ? `${lowestCeiling} ft` : "No BKN/OVC";
+  document.getElementById("crosswind").textContent = `${windCalc.crosswind} kt`;
+  document.getElementById("rawMetar").textContent = WEATHER.rawMetar;
+
+  const tafPill = document.getElementById("tafPill");
+  tafPill.textContent = WEATHER.tafHasGustsNextHour
+    ? `Gusts on ${WEATHER.tafAirport} TAF within next hour`
+    : `No gusts on ${WEATHER.tafAirport} TAF within next hour`;
+  tafPill.className = WEATHER.tafHasGustsNextHour
+    ? "pill-bad text-xs px-2 py-0.5 rounded-full"
+    : "pill-ok text-xs px-2 py-0.5 rounded-full";
+
+  const sigmetPill = document.getElementById("sigmetPill");
+  sigmetPill.textContent = WEATHER.convectiveSigmetActive
+    ? `SIGMET affecting ${WEATHER.airport}`
+    : `No SIGMET affecting ${WEATHER.airport}`;
+  sigmetPill.className = WEATHER.convectiveSigmetActive
+    ? "pill-bad text-xs px-2 py-0.5 rounded-full"
+    : "pill-ok text-xs px-2 py-0.5 rounded-full";
+
+  document.getElementById("updatedPill").textContent = `Updated ${formatLocalTime(WEATHER.receiptTime)}`;
+
+  renderTable(statuses);
+}
+
+function showError(err) {
+  console.error(err);
+  document.getElementById("rawMetar").textContent = `Error loading weather: ${err.message}`;
+  document.getElementById("updatedPill").textContent = "Updated —";
+}
+
+async function refreshAll() {
+  try {
+    await loadWeather();
+    render();
+  } catch (err) {
+    showError(err);
+  }
+}
+
+refreshAll();
+setInterval(refreshAll, CONFIG.refreshMs);
+setInterval(() => window.location.reload(), CONFIG.refreshMs);
+</script>
+</body>
+</html>

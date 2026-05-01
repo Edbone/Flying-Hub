@@ -23,6 +23,7 @@
           <a href="/photos">Photos</a>
           <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">Notes</a>
           <a href="/flight-instruction" aria-current="page">Instruction</a>
+          <a href="/flight-line">Flight Line</a>
           <a href="/contact">Contact</a>
         </div>
       </nav>
@@ -33,10 +34,9 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Flight Instruction</p>
-            <h1 id="tools-heading">Training Tools</h1>
+            <h1 id="tools-heading">Tools</h1>
           </div>
           <p class="intro">
-            Quick calculators for common flight training scenarios.
           </p>
         </div>
 
@@ -50,9 +50,6 @@
           </button>
           <button class="selector-button" type="button" role="tab" aria-selected="false" aria-controls="density-altitude-tool" data-tool="density-altitude">
             Density Altitude
-          </button>
-          <button class="selector-button" type="button" role="tab" aria-selected="false" aria-controls="aoa-tool" data-tool="aoa">
-            AOA Demo
           </button>
         </div>
 
@@ -256,51 +253,6 @@
             </div>
           </article>
 
-          <article class="tool-card demo-card" id="aoa-tool" data-tool-panel="aoa" role="tabpanel" hidden>
-            <div class="tool-header">
-              <span class="tool-label">Demo</span>
-              <h3>Angle of Attack</h3>
-            </div>
-
-            <div class="demo-controls">
-              <label>
-                <span>Airfoil pitch</span>
-                <input id="aoa-angle" type="range" min="-8" max="24" value="8" />
-              </label>
-
-              <label>
-                <span>Relative wind angle</span>
-                <input id="aoa-wind" type="range" min="-12" max="12" value="0" />
-              </label>
-            </div>
-
-            <div class="aoa-demo" aria-hidden="true">
-              <span class="relative-wind-line" id="relative-wind-line"></span>
-              <span class="relative-wind-arrow" id="relative-wind-arrow"></span>
-              <span class="critical-aoa-line"></span>
-              <span class="aoa-arc" id="aoa-arc"></span>
-              <div class="airfoil-wrap" id="airfoil-wrap">
-                <span class="airfoil"></span>
-                <span class="chord-line"></span>
-              </div>
-            </div>
-
-            <div class="results compact-results" aria-live="polite">
-              <div>
-                <span class="result-label">AOA</span>
-                <strong id="aoa-result">8 deg</strong>
-              </div>
-              <div>
-                <span class="result-label">Lift state</span>
-                <strong id="aoa-state-result">Normal</strong>
-              </div>
-              <div>
-                <span class="result-label">Critical AOA</span>
-                <strong>15 deg</strong>
-              </div>
-            </div>
-          </article>
-
         </div>
       </section>
     </main>
@@ -327,15 +279,6 @@
       const selectorButtons = document.querySelectorAll(".selector-button");
       const selectorThumb = document.querySelector(".selector-thumb");
       const toolPanels = document.querySelectorAll("[data-tool-panel]");
-      const aoaAngle = document.getElementById("aoa-angle");
-      const aoaWind = document.getElementById("aoa-wind");
-      const airfoilWrap = document.getElementById("airfoil-wrap");
-      const relativeWindLine = document.getElementById("relative-wind-line");
-      const relativeWindArrow = document.getElementById("relative-wind-arrow");
-      const aoaArc = document.getElementById("aoa-arc");
-      const aoaResult = document.getElementById("aoa-result");
-      const aoaStateResult = document.getElementById("aoa-state-result");
-
       function normalizeDegrees(value) {
         const degrees = Number(value) || 0;
         return ((degrees % 360) + 360) % 360;
@@ -425,22 +368,6 @@
         isaDeviationResult.textContent = `${isaDeviation >= 0 ? "+" : ""}${Math.round(isaDeviation)} C`;
       }
 
-      function updateAoaDemo() {
-        const pitch = Number(aoaAngle.value) || 0;
-        const wind = Number(aoaWind.value) || 0;
-        const aoa = pitch - wind;
-        const state = aoa >= 15 ? "Stall" : aoa >= 12 ? "Critical" : aoa <= 0 ? "Low lift" : "Normal";
-
-        airfoilWrap.style.transform = `translate(-50%, -50%) rotate(${-pitch}deg)`;
-        relativeWindLine.style.transform = `translateY(-50%) rotate(${-wind}deg)`;
-        relativeWindArrow.style.transform = `translateY(-50%) rotate(${-wind}deg)`;
-        aoaArc.style.transform = `translate(-50%, -50%) rotate(${-wind}deg)`;
-        aoaArc.style.setProperty("--aoa-sweep", `${Math.max(8, Math.min(80, Math.abs(aoa) * 3.2))}deg`);
-        aoaResult.textContent = `${Math.round(aoa)} deg`;
-        aoaStateResult.textContent = state;
-        aoaStateResult.classList.toggle("warning", aoa >= 12);
-      }
-
       [runwayHeading, windDirection, windSpeed].forEach((input) => {
         input.addEventListener("input", updateCrosswind);
       });
@@ -453,10 +380,6 @@
         input.addEventListener("input", updateDensityAltitude);
       });
 
-      [aoaAngle, aoaWind].forEach((input) => {
-        input.addEventListener("input", updateAoaDemo);
-      });
-
       selectorButtons.forEach((button) => {
         button.addEventListener("click", () => {
           selectTool(button.dataset.tool);
@@ -466,7 +389,6 @@
       updateCrosswind();
       updateWeightBalance();
       updateDensityAltitude();
-      updateAoaDemo();
     </script>
   </body>
 </html>
@@ -614,7 +536,7 @@
     --selector-index: 0;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     margin-bottom: 18px;
     overflow: hidden;
@@ -629,7 +551,7 @@
     top: 4px;
     bottom: 4px;
     left: 4px;
-    width: calc((100% - 8px) / 4);
+    width: calc((100% - 8px) / 3);
     border-radius: 14px;
     background: #eef6ff;
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
@@ -686,10 +608,6 @@
     grid-template-columns: minmax(0, 0.75fr) minmax(360px, 1.25fr);
   }
 
-  .demo-card {
-    grid-template-columns: minmax(0, 0.72fr) minmax(360px, 1.28fr);
-  }
-
   .tool-header,
   .tool-placeholder {
     display: flex;
@@ -739,12 +657,6 @@
   .weight-form {
     display: grid;
     gap: 10px;
-    align-self: start;
-  }
-
-  .demo-controls {
-    display: grid;
-    gap: 18px;
     align-self: start;
   }
 
@@ -878,171 +790,6 @@
     color: #ffcf7a;
   }
 
-  .aoa-demo {
-    position: relative;
-    min-height: 330px;
-    grid-column: 2;
-    overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid var(--line);
-    background:
-      linear-gradient(90deg, transparent calc(50% - 1px), rgba(238, 246, 255, 0.12) calc(50% - 1px), rgba(238, 246, 255, 0.12) calc(50% + 1px), transparent calc(50% + 1px)),
-      linear-gradient(0deg, transparent calc(50% - 1px), rgba(238, 246, 255, 0.1) calc(50% - 1px), rgba(238, 246, 255, 0.1) calc(50% + 1px), transparent calc(50% + 1px)),
-      rgba(255, 255, 255, 0.045);
-  }
-
-  .relative-wind-line,
-  .relative-wind-arrow {
-    position: absolute;
-    top: 50%;
-    left: 8%;
-    right: 8%;
-    height: 2px;
-    background: rgba(143, 199, 245, 0.72);
-    transform: translateY(-50%);
-    transform-origin: center;
-    transition: transform 180ms ease;
-  }
-
-  .relative-wind-arrow::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -1px;
-    width: 16px;
-    height: 16px;
-    border-top: 3px solid rgba(143, 199, 245, 0.9);
-    border-right: 3px solid rgba(143, 199, 245, 0.9);
-    transform: translateY(-50%) rotate(45deg);
-  }
-
-  .critical-aoa-line {
-    position: absolute;
-    top: 50%;
-    left: 12%;
-    right: 12%;
-    height: 2px;
-    border-top: 2px dashed rgba(255, 207, 122, 0.68);
-    transform: translateY(-50%) rotate(-15deg);
-    transform-origin: center;
-  }
-
-  .critical-aoa-line::after {
-    content: "Critical";
-    position: absolute;
-    right: 0;
-    top: -26px;
-    color: rgba(255, 207, 122, 0.9);
-    font-size: 0.72rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .aoa-arc {
-    --aoa-sweep: 26deg;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 118px;
-    height: 118px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, rgba(30, 115, 190, 0.46) 0deg, rgba(30, 115, 190, 0.46) var(--aoa-sweep), transparent var(--aoa-sweep));
-    mask: radial-gradient(circle, transparent 0 46px, black 47px 58px, transparent 59px);
-    opacity: 0.9;
-    transform: translate(-50%, -50%);
-    transition:
-      transform 180ms ease,
-      background 180ms ease;
-  }
-
-  .airfoil-wrap {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(420px, 78%);
-    height: 118px;
-    transform: translate(-50%, -50%);
-    transform-origin: center;
-    transition: transform 180ms ease;
-  }
-
-  .airfoil {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 22px;
-    height: 68px;
-    background: linear-gradient(180deg, #f8fcff 0%, #cce9ff 46%, #8fc7f5 100%);
-    clip-path: polygon(
-      0 54%,
-      3% 40%,
-      10% 28%,
-      23% 17%,
-      42% 11%,
-      64% 15%,
-      84% 29%,
-      100% 51%,
-      86% 56%,
-      62% 61%,
-      34% 62%,
-      12% 59%
-    );
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
-  }
-
-  .airfoil::before {
-    content: "";
-    position: absolute;
-    left: -1px;
-    top: 31%;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #f8fcff;
-  }
-
-  .airfoil::after {
-    content: "";
-    position: absolute;
-    right: -1px;
-    top: 47%;
-    width: 28px;
-    height: 9px;
-    background: #8fc7f5;
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
-  }
-
-  .chord-line {
-    position: absolute;
-    top: 58%;
-    left: 2%;
-    right: 1%;
-    height: 2px;
-    background: rgba(7, 17, 31, 0.62);
-    transform: translateY(-50%);
-  }
-
-  .chord-line::before,
-  .chord-line::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(7, 17, 31, 0.68);
-    transform: translateY(-50%);
-  }
-
-  .chord-line::before {
-    left: 0;
-  }
-
-  .chord-line::after {
-    right: 0;
-  }
-
   .wind-visual {
     position: relative;
     min-height: 180px;
@@ -1110,8 +857,7 @@
     }
 
     .results,
-    .wind-visual,
-    .aoa-demo {
+    .wind-visual {
       grid-column: auto;
     }
   }
