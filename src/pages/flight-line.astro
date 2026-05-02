@@ -1,3 +1,7 @@
+---
+import Analytics from "@vercel/analytics/astro";
+---
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -343,6 +347,62 @@
       .weather-grid-compact {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .title-text {
+        font-size: 22px;
+      }
+
+      .table-fit-inner {
+        min-width: 0 !important;
+        overflow: visible;
+      }
+
+      .table-head {
+        display: none;
+      }
+
+      .status-wrap {
+        gap: 10px;
+        overflow: visible;
+        border: 0 !important;
+        background: transparent;
+      }
+
+      :global(.group) {
+        display: block;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255,255,255,.035);
+      }
+
+      :global(.group + .group) {
+        border-top: 1px solid var(--line);
+      }
+
+      :global(.profile-cell) {
+        min-height: 0;
+        padding: 12px 14px;
+        justify-content: flex-start;
+        border-right: 0;
+        border-bottom: 1px solid rgba(238,246,255,.1);
+        font-size: 0.95rem;
+      }
+
+      :global(.status-row) {
+        grid-template-columns: minmax(0, 1fr) 96px;
+        min-height: 48px;
+      }
+
+      :global(.condition-cell),
+      :global(.status-cell) {
+        min-height: 48px;
+        font-size: 0.78rem;
+      }
+
+      :global(.status-cell) {
+        letter-spacing: 0.02em;
+      }
     }
   </style>
 
@@ -432,7 +492,7 @@
       </section>
 
       <section class="glass-card rounded-2xl p-2 sm:p-3 table-fit">
-        <div class="table-fit-inner min-w-[760px]">
+        <div class="table-fit-inner">
           <div class="grid grid-cols-3 gap-0 rounded-t-xl overflow-hidden table-head"
                style="grid-template-columns: 34% 33% 33%; background: rgba(255,255,255,.06); border: 1px solid var(--line);">
             <div class="px-3 py-2 text-xs font-extrabold uppercase tracking-wider">Flight Profile</div>
@@ -448,6 +508,8 @@
       </section>
     </main>
   </div>
+
+<Analytics />
 
 <script>
 const CONFIG = {

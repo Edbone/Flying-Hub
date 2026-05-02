@@ -1,4 +1,6 @@
 ---
+import Analytics from "@vercel/analytics/astro";
+
 const cloudName = "dnjzeouq5";
 
 let images = [];
@@ -53,14 +55,7 @@ try {
             
           </p>
 
-          <div class="buttons">
-            <a class="button primary" href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">
-              Open Notes
-            </a>
-            <a class="button secondary" href="/photos">
-              View Photos
-            </a>
-          </div>
+   
 
           <div class="course-strip" aria-label="Course areas">
             <span>Private</span>
@@ -87,29 +82,25 @@ try {
         </div>
       </section>
 
-      <section class="feature-grid" aria-label="Site sections">
-        <a class="feature-card" href="/photos">
-          <span class="feature-label">Gallery</span>
-          <h2>Photos</h2>
-          <p>Aircraft, trips, training, and flying moments.</p>
-          <span class="card-link">View photos</span>
-        </a>
+      <section class="notes-preview" aria-labelledby="notes-preview-heading">
+        <div class="section-heading">
 
-        <a class="feature-card" href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">
-          <span class="feature-label">Study</span>
-          <h2>Aviation Notes</h2>
-          <p>Private, instrument, commercial, CFI, systems, and checkride prep.</p>
-          <span class="card-link">Open notes</span>
-        </a>
+            <p class="eyebrow"></p>
+            <h2 id="notes-preview-heading">Aviation Notes</h2>
+          </div>
+        </div>
 
-        <a class="feature-card" href="/flight-instruction">
-          <span class="feature-label">Training</span>
-          <h2>Instruction</h2>
-          <p>Ground instruction, lesson planning, and student resources.</p>
-          <span class="card-link">Learn more</span>
-        </a>
+        <div class="notes-frame">
+          <iframe
+            src="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates"
+            title="EKAviates aviation notes"
+            loading="lazy"
+          ></iframe>
+        </div>
       </section>
     </main>
+
+    <Analytics />
 
     <script>
       const photos = document.querySelectorAll(".photo-panel img");
@@ -392,76 +383,48 @@ h1 {
     font-weight: 800;
   }
 
-  .feature-grid {
+  .notes-preview {
     margin-top: 76px;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
   }
 
-  .feature-card {
-    position: relative;
-    min-height: 245px;
-    padding: 28px;
+  .section-heading {
+    margin-bottom: 24px;
+    padding-bottom: 22px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-heading .eyebrow {
+    margin-bottom: 12px;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2.2rem, 5vw, 4.4rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+
+  .notes-frame {
     overflow: hidden;
+    height: clamp(520px, 68vh, 680px);
     border-radius: 22px;
     border: 1px solid var(--line);
     background: var(--paper);
-    color: var(--text);
-    text-decoration: none;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow);
     backdrop-filter: blur(18px);
-    transition:
-      transform 180ms ease,
-      box-shadow 180ms ease,
-      border-color 180ms ease;
   }
 
-  .feature-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(20, 94, 168, 0.34);
-    box-shadow: 0 24px 50px rgba(20, 35, 50, 0.13);
-  }
-
-  .feature-label {
-    color: var(--blue);
-    font-size: 0.72rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-  }
-
-  .feature-card h2 {
-    margin: 28px 0 10px;
-    color: var(--ink);
-    font-size: 1.65rem;
-    line-height: 1;
-    letter-spacing: -0.055em;
-  }
-
-  .feature-card p {
-    max-width: 28ch;
-    margin: 0 auto;
-    color: var(--muted);
-    font-size: 0.98rem;
-    line-height: 1.55;
-  }
-
-  .card-link {
-    margin-top: 28px;
-    color: var(--ink);
-    font-size: 0.9rem;
-    font-weight: 900;
-  }
-
-  .card-link::after {
-    content: " →";
-    color: var(--blue);
+  .notes-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #0b1118;
   }
 
   @media (max-width: 960px) {
@@ -479,13 +442,12 @@ h1 {
       min-height: 480px;
     }
 
-    .feature-grid {
-      grid-template-columns: 1fr;
+    .notes-preview {
       margin-top: 48px;
     }
 
-    .feature-card {
-      min-height: 210px;
+    .notes-frame {
+      height: 620px;
     }
   }
 
@@ -528,8 +490,18 @@ h1 {
       border-radius: 22px;
     }
 
-    .feature-card {
-      min-height: 205px;
+    .section-heading {
+      align-items: flex-start;
+      flex-direction: column;
     }
+
+    .section-heading .button {
+      width: 100%;
+    }
+
+    .notes-frame {
+      height: 560px;
+    }
+
   }
 </style>
