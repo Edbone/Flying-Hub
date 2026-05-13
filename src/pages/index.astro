@@ -34,7 +34,7 @@ try {
         <a class="brand" href="/">EKAviates</a>
 
         <div class="nav-links">
-          <a href="/">Home</a>
+          <a href="/" aria-current="page">Home</a>
           <a href="/photos">Photos</a>
           <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">Notes</a>
           <details class="nav-dropdown">
@@ -184,7 +184,7 @@ body::before {
   }
 
   .nav {
-    max-width: 1180px;
+    max-width: 1360px;
     margin: 0 auto;
     padding: 18px 24px;
     display: flex;
@@ -209,6 +209,7 @@ body::before {
 
   .nav-links a,
   .nav-dropdown summary {
+    position: relative;
     color: var(--muted);
     font-size: 0.92rem;
     font-weight: 700;
@@ -218,8 +219,40 @@ body::before {
   }
 
   .nav-links a:hover,
+  .nav-links a[aria-current="page"],
+  .nav-dropdown summary[aria-current="page"],
   .nav-dropdown summary:hover {
     color: var(--blue);
+  }
+
+  .nav-links > a[aria-current="page"]::after,
+  .nav-dropdown summary[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -9px;
+    height: 2px;
+    border-radius: 999px;
+    background: #00d9ff;
+    box-shadow:
+      0 0 8px rgba(0, 217, 255, 0.95),
+      0 0 18px rgba(0, 217, 255, 0.8),
+      0 0 32px rgba(0, 217, 255, 0.42);
+    transform-origin: left;
+    animation: navGlowIn 650ms ease-out both;
+  }
+
+  @keyframes navGlowIn {
+    from {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
   }
 
   .nav-dropdown {
@@ -272,7 +305,7 @@ body::before {
 
   main {
     position: relative;
-    max-width: 1180px;
+    max-width: 1360px;
     margin: 0 auto;
     padding: 68px 24px 88px;
   }
@@ -517,6 +550,7 @@ h1 {
     }
 
     .nav-links {
+      position: relative;
       width: 100%;
       gap: 10px 16px;
       flex-wrap: wrap;
@@ -527,16 +561,21 @@ h1 {
     }
 
     .dropdown-menu {
-      position: static;
-      width: min(100%, 260px);
-      margin-top: 10px;
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      min-width: min(220px, 100%);
+      width: min(100%, 320px);
+      margin-top: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
     }
 
     .nav-dropdown[open] .dropdown-menu {
-      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
     }
 
     main {
