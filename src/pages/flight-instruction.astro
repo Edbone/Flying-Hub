@@ -23,7 +23,14 @@ import Analytics from "@vercel/analytics/astro";
           <a href="/">Home</a>
           <a href="/photos">Photos</a>
           <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">Notes</a>
-          <a href="/flight-instruction" aria-current="page">Instruction</a>
+          <details class="nav-dropdown">
+            <summary aria-current="page">Instruction</summary>
+            <div class="dropdown-menu">
+              <a href="/flight-instruction#crosswind-tool" data-tool-link="crosswind">Crosswind</a>
+              <a href="/flight-instruction#weight-balance-tool" data-tool-link="weight-balance">Weight & Balance</a>
+              <a href="/flight-instruction#density-altitude-tool" data-tool-link="density-altitude">Density Altitude</a>
+            </div>
+          </details>
           <a href="/flight-line">Flight Line</a>
           <a href="/contact">Contact</a>
         </div>
@@ -41,21 +48,8 @@ import Analytics from "@vercel/analytics/astro";
           </p>
         </div>
 
-        <div class="tool-selector" role="tablist" aria-label="Training tools">
-          <span class="selector-thumb" aria-hidden="true"></span>
-          <button class="selector-button active" type="button" role="tab" aria-selected="true" aria-controls="crosswind-tool" data-tool="crosswind">
-            Crosswind
-          </button>
-          <button class="selector-button" type="button" role="tab" aria-selected="false" aria-controls="weight-balance-tool" data-tool="weight-balance">
-            Weight & Balance
-          </button>
-          <button class="selector-button" type="button" role="tab" aria-selected="false" aria-controls="density-altitude-tool" data-tool="density-altitude">
-            Density Altitude
-          </button>
-        </div>
-
         <div class="tools-workspace">
-          <article class="tool-card active" id="crosswind-tool" data-tool-panel="crosswind" role="tabpanel">
+          <article class="tool-card active" id="crosswind-tool" data-tool-panel="crosswind">
             <div class="tool-header">
               <span class="tool-label">Calculator</span>
               <h3>Crosswind Component</h3>
@@ -118,7 +112,7 @@ import Analytics from "@vercel/analytics/astro";
             </div>
           </article>
 
-          <article class="tool-card compact-card" id="weight-balance-tool" data-tool-panel="weight-balance" role="tabpanel" hidden>
+          <article class="tool-card compact-card" id="weight-balance-tool" data-tool-panel="weight-balance">
             <div class="tool-header">
               <span class="tool-label">Calculator</span>
               <h3>Weight & Balance</h3>
@@ -197,7 +191,7 @@ import Analytics from "@vercel/analytics/astro";
             </div>
           </article>
 
-          <article class="tool-card compact-card" id="density-altitude-tool" data-tool-panel="density-altitude" role="tabpanel" hidden>
+          <article class="tool-card compact-card" id="density-altitude-tool" data-tool-panel="density-altitude">
             <div class="tool-header">
               <span class="tool-label">Calculator</span>
               <h3>Density Altitude</h3>
@@ -279,9 +273,9 @@ import Analytics from "@vercel/analytics/astro";
       const pressureAltitudeResult = document.getElementById("pressure-altitude-result");
       const densityAltitudeResult = document.getElementById("density-altitude-result");
       const isaDeviationResult = document.getElementById("isa-deviation-result");
-      const selectorButtons = document.querySelectorAll(".selector-button");
-      const selectorThumb = document.querySelector(".selector-thumb");
       const toolPanels = document.querySelectorAll("[data-tool-panel]");
+      const toolLinks = document.querySelectorAll("[data-tool-link]");
+      const validTools = new Set(Array.from(toolPanels, (panel) => panel.dataset.toolPanel));
       function normalizeDegrees(value) {
         const degrees = Number(value) || 0;
         return ((degrees % 360) + 360) % 360;
@@ -299,23 +293,31 @@ import Analytics from "@vercel/analytics/astro";
         return Number(document.getElementById(id).value) || 0;
       }
 
-      function selectTool(toolName) {
-        selectorButtons.forEach((button, index) => {
-          const isActive = button.dataset.tool === toolName;
-          button.classList.toggle("active", isActive);
-          button.setAttribute("aria-selected", String(isActive));
+      function getToolFromHash() {
+        const toolName = window.location.hash.replace("#", "").replace("-tool", "");
+        return validTools.has(toolName) ? toolName : "crosswind";
+      }
+
+      function selectTool(toolName, shouldScroll = false) {
+        const selectedPanel = document.querySelector(`[data-tool-panel="${toolName}"]`);
+        toolPanels.forEach((panel) => {
+          const isActive = panel.dataset.toolPanel === toolName;
+          panel.classList.toggle("active", isActive);
+        });
+
+        toolLinks.forEach((link) => {
+          const isActive = link.dataset.toolLink === toolName;
 
           if (isActive) {
-            selectorThumb.style.setProperty("--selector-index", index);
-            button.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+            link.setAttribute("aria-current", "page");
+          } else {
+            link.removeAttribute("aria-current");
           }
         });
 
-        toolPanels.forEach((panel) => {
-          const isActive = panel.dataset.toolPanel === toolName;
-          panel.hidden = !isActive;
-          panel.classList.toggle("active", isActive);
-        });
+        if (shouldScroll && selectedPanel) {
+          requestAnimationFrame(() => selectedPanel.scrollIntoView({ block: "start" }));
+        }
       }
 
       function updateCrosswind() {
@@ -383,15 +385,20 @@ import Analytics from "@vercel/analytics/astro";
         input.addEventListener("input", updateDensityAltitude);
       });
 
-      selectorButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          selectTool(button.dataset.tool);
+      toolLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          link.closest("details")?.removeAttribute("open");
         });
       });
 
       updateCrosswind();
       updateWeightBalance();
       updateDensityAltitude();
+      selectTool(getToolFromHash(), Boolean(window.location.hash));
+
+      window.addEventListener("hashchange", () => {
+        selectTool(getToolFromHash(), true);
+      });
     </script>
   </body>
 </html>
@@ -476,17 +483,70 @@ import Analytics from "@vercel/analytics/astro";
     flex-wrap: wrap;
   }
 
-  .nav-links a {
+  .nav-links a,
+  .nav-dropdown summary {
     color: var(--muted);
     font-size: 0.92rem;
     font-weight: 700;
     text-decoration: none;
+    list-style: none;
     transition: color 180ms ease;
   }
 
   .nav-links a:hover,
-  .nav-links a[aria-current="page"] {
+  .nav-links a[aria-current="page"],
+  .nav-dropdown summary:hover,
+  .nav-dropdown summary[aria-current="page"] {
     color: var(--blue);
+  }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown summary {
+    cursor: pointer;
+  }
+
+  .nav-dropdown summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    z-index: 30;
+    min-width: 220px;
+    padding: 8px;
+    display: grid;
+    gap: 2px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(5, 8, 13, 0.96);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -4px);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .nav-dropdown[open] .dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+
+  .dropdown-menu a {
+    padding: 10px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .dropdown-menu a:hover,
+  .dropdown-menu a[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text);
   }
 
   main {
@@ -535,56 +595,6 @@ import Analytics from "@vercel/analytics/astro";
     padding-bottom: 24px;
   }
 
-  .tool-selector {
-    --selector-index: 0;
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
-    margin-bottom: 18px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
-  }
-
-  .selector-thumb {
-    position: absolute;
-    top: 4px;
-    bottom: 4px;
-    left: 4px;
-    width: calc((100% - 8px) / 3);
-    border-radius: 14px;
-    background: #eef6ff;
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
-    transform: translateX(calc(var(--selector-index) * 100%));
-    transition: transform 220ms ease;
-  }
-
-  .selector-button {
-    position: relative;
-    z-index: 1;
-    min-height: 58px;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    font: inherit;
-    font-size: 0.94rem;
-    font-weight: 900;
-    transition: color 180ms ease;
-  }
-
-  .selector-button.active {
-    color: #07111f;
-  }
-
-  .selector-button:focus-visible {
-    outline: 3px solid rgba(30, 115, 190, 0.65);
-    outline-offset: -6px;
-  }
-
   .tools-workspace {
     display: grid;
   }
@@ -603,7 +613,7 @@ import Analytics from "@vercel/analytics/astro";
     backdrop-filter: blur(18px);
   }
 
-  .tool-card[hidden] {
+  .tool-card:not(.active) {
     display: none;
   }
 
@@ -877,33 +887,29 @@ import Analytics from "@vercel/analytics/astro";
       gap: 10px 16px;
     }
 
+    .nav-dropdown {
+      position: static;
+    }
+
+    .dropdown-menu {
+      position: static;
+      width: min(100%, 260px);
+      margin-top: 10px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+
+    .nav-dropdown[open] .dropdown-menu {
+      transform: none;
+    }
+
     main {
       padding-inline: 18px;
     }
 
     h1 {
       font-size: clamp(2.8rem, 15vw, 4.2rem);
-    }
-
-    .tool-selector {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-    }
-
-    .selector-thumb {
-      display: none;
-    }
-
-    .selector-button {
-      flex: 0 0 74%;
-      scroll-snap-align: center;
-      border-right: 1px solid var(--line);
-    }
-
-    .selector-button.active {
-      background: #eef6ff;
-      color: #07111f;
     }
 
     .tool-card {

@@ -97,17 +97,69 @@ import Analytics from "@vercel/analytics/astro";
       flex-wrap: wrap;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-dropdown summary {
       color: var(--muted);
       font-size: 0.92rem;
       font-weight: 700;
       text-decoration: none;
+      list-style: none;
       transition: color 180ms ease;
     }
 
     .nav-links a:hover,
-    .nav-links a[aria-current="page"] {
+    .nav-links a[aria-current="page"],
+    .nav-dropdown summary:hover,
+    .nav-dropdown summary[aria-current="page"] {
       color: var(--blue);
+    }
+
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown summary {
+      cursor: pointer;
+    }
+
+    .nav-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      z-index: 30;
+      min-width: 220px;
+      padding: 8px;
+      display: grid;
+      gap: 2px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(5, 8, 13, 0.96);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -4px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .nav-dropdown[open] .dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    .dropdown-menu a {
+      padding: 10px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .dropdown-menu a:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
     }
 
     .glass-card{
@@ -340,6 +392,23 @@ import Analytics from "@vercel/analytics/astro";
         gap: 10px 16px;
       }
 
+      .nav-dropdown {
+        position: static;
+      }
+
+      .dropdown-menu {
+        position: static;
+        width: min(100%, 260px);
+        margin-top: 10px;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+      }
+
+      .nav-dropdown[open] .dropdown-menu {
+        transform: none;
+      }
+
       .compact-shell {
         padding-inline: 18px;
       }
@@ -427,7 +496,14 @@ import Analytics from "@vercel/analytics/astro";
         <a href="/">Home</a>
         <a href="/photos">Photos</a>
         <a href="https://publish.obsidian.md/ekaviates/Pilot+Hub/EKAviates">Notes</a>
-        <a href="/flight-instruction">Instruction</a>
+        <details class="nav-dropdown">
+            <summary>Instruction</summary>
+            <div class="dropdown-menu">
+              <a href="/flight-instruction#crosswind-tool">Crosswind</a>
+              <a href="/flight-instruction#weight-balance-tool">Weight & Balance</a>
+              <a href="/flight-instruction#density-altitude-tool">Density Altitude</a>
+            </div>
+          </details>
         <a href="/flight-line" aria-current="page">Flight Line</a>
         <a href="/contact">Contact</a>
       </div>
