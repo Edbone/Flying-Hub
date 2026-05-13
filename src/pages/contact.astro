@@ -101,15 +101,18 @@ import Analytics from "@vercel/analytics/astro";
   html,
   body {
     min-height: 100%;
+    background-color: var(--bg);
   }
 
   body {
     margin: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     font-family:
       Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
     color: var(--text);
+    background-color: var(--bg);
     background:
       radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
       linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
@@ -117,6 +120,7 @@ import Analytics from "@vercel/analytics/astro";
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
+    background-color: var(--bg);
   }
 
   body::before {
@@ -126,6 +130,13 @@ import Analytics from "@vercel/analytics/astro";
     pointer-events: none;
     background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
     mask-image: linear-gradient(to bottom, black, transparent 82%);
+  }
+
+  @media (max-width: 1180px), (hover: none) {
+    body {
+      background-attachment: scroll;
+      background-position: center top;
+    }
   }
 
   .site-header {
