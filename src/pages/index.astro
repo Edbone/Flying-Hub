@@ -37,6 +37,7 @@ try {
           <a href="/" aria-current="page">Home</a>
           <a href="/photos">Photos</a>
           <a href="https://publish.obsidian.md/ekaviates/EKAviates">Notes</a>
+          <a href="https://wx.ekaviates.com/">Radar & Traffic</a>
           <details class="nav-dropdown">
             <summary>Instruction</summary>
             <div class="dropdown-menu">
@@ -89,22 +90,41 @@ try {
         </div>
       </section>
 
-      <section class="notes-preview" aria-labelledby="notes-preview-heading">
-        <div class="section-heading">
-
-            <p class="eyebrow"></p>
-            <h2 id="notes-preview-heading">Aviation Notes</h2>
+      <div class="iframe-pair">
+        <section class="notes-preview" aria-labelledby="notes-preview-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow"></p>
+              <h2 id="notes-preview-heading">Aviation Notes</h2>
+            </div>
           </div>
-        </div>
 
-        <div class="notes-frame">
-          <iframe
-            src="https://publish.obsidian.md/ekaviates/EKAviates"
-            title="EKAviates aviation notes"
-            loading="lazy"
-          ></iframe>
-        </div>
-      </section>
+          <div class="notes-frame">
+            <iframe
+              src="https://publish.obsidian.md/ekaviates/EKAviates"
+              title="EKAviates aviation notes"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </section>
+
+        <section class="radar-preview" aria-labelledby="radar-preview-heading">
+          <div class="section-heading">
+            <div>
+              <h2 id="radar-preview-heading">Live Tracker</h2>
+            </div>
+          </div>
+
+          <div class="radar-frame">
+            <iframe
+              src="https://wx.ekaviates.com/"
+              title="EKAviates weather radar and traffic tracker"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+      </div>
     </main>
 
     <Analytics />
@@ -486,13 +506,17 @@ h1 {
     font-weight: 800;
   }
 
-  .notes-preview {
+  .iframe-pair {
     margin-top: 76px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
   }
 
   .section-heading {
     margin-bottom: 24px;
-    padding-bottom: 22px;
+    min-height: 82px;
+    padding-bottom: 16px;
     display: flex;
     align-items: end;
     justify-content: space-between;
@@ -507,11 +531,12 @@ h1 {
   .section-heading h2 {
     margin: 0;
     color: var(--ink);
-    font-size: clamp(2.2rem, 5vw, 4.4rem);
+    font-size: clamp(1.65rem, 3vw, 2.6rem);
     line-height: 0.95;
     letter-spacing: -0.045em;
   }
 
+  .radar-frame,
   .notes-frame {
     overflow: hidden;
     height: clamp(520px, 68vh, 680px);
@@ -522,6 +547,7 @@ h1 {
     backdrop-filter: blur(18px);
   }
 
+  .radar-frame iframe,
   .notes-frame iframe {
     display: block;
     width: 100%;
@@ -545,10 +571,11 @@ h1 {
       min-height: 480px;
     }
 
-    .notes-preview {
+    .iframe-pair {
       margin-top: 48px;
     }
 
+    .radar-frame,
     .notes-frame {
       height: 620px;
     }
@@ -625,6 +652,11 @@ h1 {
       width: 100%;
     }
 
+    .iframe-pair {
+      grid-template-columns: 1fr;
+    }
+
+    .radar-frame,
     .notes-frame {
       height: 560px;
     }
