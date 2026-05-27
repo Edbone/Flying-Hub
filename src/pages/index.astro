@@ -122,6 +122,11 @@ try {
               loading="lazy"
               allowfullscreen
             ></iframe>
+            <a
+              class="tracker-link"
+              href="https://wx.ekaviates.com/"
+              aria-label="Open the live tracker website"
+            ></a>
           </div>
         </section>
       </div>
@@ -538,6 +543,7 @@ h1 {
 
   .radar-frame,
   .notes-frame {
+    position: relative;
     overflow: hidden;
     height: clamp(520px, 68vh, 680px);
     border-radius: 22px;
@@ -554,6 +560,13 @@ h1 {
     height: 100%;
     border: 0;
     background: #0b1118;
+  }
+
+  .tracker-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
   }
 
   @media (max-width: 1100px) {
