@@ -1,20 +1,5 @@
 ---
 import Analytics from "@vercel/analytics/astro";
-
-const cloudName = "dnjzeouq5";
-
-let images = [];
-
-try {
-  const res = await fetch(
-    `https://res.cloudinary.com/${cloudName}/image/list/aviation.json`
-  );
-  const data = await res.json();
-
-  images = (data.resources ?? []).sort((a, b) => b.version - a.version);
-} catch (e) {
-  images = [];
-}
 ---
 
 <html lang="en">
@@ -54,39 +39,17 @@ try {
 
     <main>
       <section class="hero">
+        <img class="hero-logo" src="/ekwx-logo.png" alt="EKWX" />
+
         <div class="hero-copy">
-          <p class="eyebrow">Eddie Jackson</p>
-
-          <h1>Flight training, notes, and photos.</h1>
-
-          <p class="intro">
-            
-          </p>
-
-   
+          <h1>Aviation Resources<br />& Live Tracking</h1>
 
           <div class="course-strip" aria-label="Course areas">
             <span>Private</span>
             <span>Instrument</span>
             <span>Commercial</span>
           </div>
-        </div>
 
-        <div class="photo-panel">
-          {images.length > 0 ? (
-            images.slice(0, 35).map((img, index) => (
-              <img
-                class={index === 0 ? "active" : ""}
-                src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1200/${img.public_id}.${img.format}`}
-                alt={img.public_id}
-                loading={index === 0 ? "eager" : "lazy"}
-              />
-            ))
-          ) : (
-            <div class="photo-fallback">
-              <span>No photos loaded</span>
-            </div>
-          )}
         </div>
       </section>
 
@@ -133,19 +96,6 @@ try {
     </main>
 
     <Analytics />
-
-    <script>
-      const photos = document.querySelectorAll(".photo-panel img");
-      let current = 0;
-
-      if (photos.length > 1) {
-        setInterval(() => {
-          photos[current].classList.remove("active");
-          current = (current + 1) % photos.length;
-          photos[current].classList.add("active");
-        }, 4200);
-      }
-    </script>
   </body>
 </html>
 
@@ -344,18 +294,30 @@ body::before {
     position: relative;
     max-width: 1360px;
     margin: 0 auto;
-    padding: 68px 24px 88px;
+    padding: 36px 24px 88px;
   }
 
   .hero {
+    position: relative;
+    min-height: 180px;
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(380px, 1.1fr);
-    gap: 56px;
-    align-items: center;
+    align-items: start;
+    text-align: center;
+  }
+
+  .hero-logo {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: clamp(84px, 13vw, 150px);
+    height: auto;
+    display: block;
+    opacity: 0.9;
   }
 
   .hero-copy {
-    max-width: 630px;
+    max-width: none;
+    padding-inline: clamp(96px, 15vw, 170px);
   }
 
   .eyebrow {
@@ -370,14 +332,14 @@ body::before {
 h1 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(3.4rem, 7.5vw, 6.8rem);
+  font-size: clamp(2.55rem, 5.625vw, 5.1rem);
   line-height: 0.95;
   letter-spacing: -0.045em;
 }
 
   .intro {
     max-width: 540px;
-    margin: 26px 0 0;
+    margin: 20px auto 0;
     color: #c7d5e2;
     font-size: clamp(1.05rem, 1.6vw, 1.22rem);
     line-height: 1.65;
@@ -434,13 +396,12 @@ h1 {
   }
 
   .course-strip {
-    margin-top: 42px;
-    padding-top: 22px;
+    margin-top: 24px;
+    padding-top: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    border-top: 1px solid var(--line);
   }
 
   .course-strip span {
@@ -455,64 +416,8 @@ h1 {
     letter-spacing: 0.08em;
   }
 
-  .photo-panel {
-    position: relative;
-    min-height: 620px;
-    overflow: hidden;
-    border-radius: 28px;
-    background: #17212b;
-    box-shadow: var(--shadow);
-  }
-
-  .photo-panel::before {
-    content: "";
-    position: absolute;
-    inset: 14px;
-    z-index: 2;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 20px;
-    pointer-events: none;
-  }
-
-  .photo-panel::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-      linear-gradient(to top, rgba(5, 10, 16, 0.35), transparent 45%),
-      linear-gradient(to right, rgba(5, 10, 16, 0.12), transparent 42%);
-    pointer-events: none;
-  }
-
-  .photo-panel img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transform: scale(1.035);
-    transition:
-      opacity 900ms ease,
-      transform 5200ms ease;
-  }
-
-  .photo-panel img.active {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .photo-fallback {
-    min-height: 620px;
-    display: grid;
-    place-items: center;
-    color: rgba(255, 255, 255, 0.78);
-    font-weight: 800;
-  }
-
   .iframe-pair {
-    margin-top: 76px;
+    margin-top: 34px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
@@ -524,7 +429,8 @@ h1 {
     padding-bottom: 16px;
     display: flex;
     align-items: end;
-    justify-content: space-between;
+    justify-content: center;
+    text-align: center;
     gap: 24px;
     border-bottom: 1px solid var(--line);
   }
@@ -571,21 +477,19 @@ h1 {
 
   @media (max-width: 1100px) {
     main {
-      padding-top: 48px;
+      padding-top: 34px;
     }
 
     .hero {
-      grid-template-columns: 1fr;
-      gap: 40px;
+      text-align: center;
     }
 
-    .photo-panel,
-    .photo-fallback {
-      min-height: 480px;
+    .hero-copy {
+      padding-inline: clamp(80px, 15vw, 130px);
     }
 
     .iframe-pair {
-      margin-top: 48px;
+      margin-top: 32px;
     }
 
     .radar-frame,
@@ -635,7 +539,22 @@ h1 {
     }
 
     h1 {
-      font-size: clamp(3rem, 16vw, 4.7rem);
+      font-size: clamp(2.25rem, 12vw, 3.525rem);
+    }
+
+    .hero {
+      min-height: 0;
+      padding-top: 78px;
+    }
+
+    .hero-logo {
+      left: 50%;
+      width: 86px;
+      transform: translateX(-50%);
+    }
+
+    .hero-copy {
+      padding-inline: 0;
     }
 
     .intro {
@@ -648,12 +567,6 @@ h1 {
 
     .button {
       width: 100%;
-    }
-
-    .photo-panel,
-    .photo-fallback {
-      min-height: 390px;
-      border-radius: 22px;
     }
 
     .section-heading {
