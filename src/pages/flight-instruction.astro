@@ -18,7 +18,9 @@ import Analytics from "@vercel/analytics/astro";
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a class="brand" href="/">EKAviates</a>
+        <a class="brand" href="/" aria-label="Eddie Jackson Aviation home">
+          <img src="/ekwx-logo.png" alt="Eddie Jackson Aviation logo" />
+        </a>
 
         <div class="nav-links">
           <a href="/">Home</a>
@@ -408,15 +410,15 @@ import Analytics from "@vercel/analytics/astro";
 
 <style>
   :root {
-    --bg: #05080d;
-    --paper: rgba(9, 16, 25, 0.84);
-    --text: #eef6ff;
-    --muted: #a8b8c8;
-    --line: rgba(238, 246, 255, 0.14);
+    --bg: #f7fbff;
+    --paper: rgba(255, 255, 255, 0.88);
+    --text: #17324d;
+    --muted: #5c738b;
+    --line: rgba(30, 115, 190, 0.14);
     --blue: #1e73be;
     --blue-dark: #0b3f73;
-    --ink: #f7fbff;
-    --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    --ink: #07111f;
+    --shadow: 0 24px 70px rgba(26, 62, 96, 0.14);
   }
 
   * {
@@ -439,8 +441,8 @@ import Analytics from "@vercel/analytics/astro";
     color: var(--text);
     background-color: var(--bg);
     background:
-      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
-      linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
+      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.16), transparent 30rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 247, 255, 0.9) 48%, rgba(232, 242, 252, 0.94) 100%),
       url("/topobackground.png");
     background-attachment: fixed;
     background-position: center;
@@ -453,7 +455,7 @@ import Analytics from "@vercel/analytics/astro";
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
+    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.16), transparent 42%);
     mask-image: linear-gradient(to bottom, black, transparent 82%);
   }
 
@@ -468,7 +470,7 @@ import Analytics from "@vercel/analytics/astro";
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(5, 8, 13, 0.86);
+    background: rgba(255, 255, 255, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(16px);
   }
@@ -484,11 +486,15 @@ import Analytics from "@vercel/analytics/astro";
   }
 
   .brand {
-    color: var(--text);
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+  }
+
+  .brand img {
+    display: block;
+    width: auto;
+    height: clamp(68px, 6vw, 92px);
   }
 
   .nav-links {
@@ -569,7 +575,7 @@ import Analytics from "@vercel/analytics/astro";
     gap: 2px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(5, 8, 13, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: var(--shadow);
     opacity: 0;
     pointer-events: none;
@@ -591,7 +597,7 @@ import Analytics from "@vercel/analytics/astro";
 
   .dropdown-menu a:hover,
   .dropdown-menu a[aria-current="page"] {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(30, 115, 190, 0.08);
     color: var(--text);
   }
 
@@ -622,7 +628,7 @@ import Analytics from "@vercel/analytics/astro";
   .intro {
     max-width: 340px;
     margin: 0;
-    color: #c7d5e2;
+    color: var(--muted);
     font-size: 1rem;
     line-height: 1.55;
   }
@@ -727,7 +733,7 @@ import Analytics from "@vercel/analytics/astro";
   }
 
   .wb-row > span {
-    color: #d6e4f0;
+    color: var(--text);
     font-size: 0.82rem;
     font-weight: 800;
   }
@@ -755,7 +761,7 @@ import Analytics from "@vercel/analytics/astro";
   label {
     display: grid;
     gap: 8px;
-    color: #d6e4f0;
+    color: var(--text);
     font-size: 0.82rem;
     font-weight: 800;
   }
@@ -767,7 +773,7 @@ import Analytics from "@vercel/analytics/astro";
     padding: 0 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.82);
     color: var(--ink);
     font: inherit;
     font-size: 1rem;
@@ -781,7 +787,7 @@ import Analytics from "@vercel/analytics/astro";
     border: 0;
     border-radius: 999px;
     background: transparent;
-    accent-color: #eef6ff;
+    accent-color: var(--blue);
   }
 
   select {
@@ -813,7 +819,7 @@ import Analytics from "@vercel/analytics/astro";
     padding: 18px;
     border-radius: 16px;
     border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.82);
   }
 
   .compact-results {
@@ -857,8 +863,8 @@ import Analytics from "@vercel/analytics/astro";
     border-radius: 18px;
     border: 1px solid var(--line);
     background:
-      linear-gradient(90deg, transparent calc(50% - 1px), rgba(238, 246, 255, 0.28) calc(50% - 1px), rgba(238, 246, 255, 0.28) calc(50% + 1px), transparent calc(50% + 1px)),
-      rgba(255, 255, 255, 0.045);
+      linear-gradient(90deg, transparent calc(50% - 1px), rgba(30, 115, 190, 0.2) calc(50% - 1px), rgba(30, 115, 190, 0.2) calc(50% + 1px), transparent calc(50% + 1px)),
+      rgba(30, 115, 190, 0.05);
   }
 
   .runway-line {
@@ -868,7 +874,7 @@ import Analytics from "@vercel/analytics/astro";
     width: 14px;
     height: 92px;
     border-radius: 999px;
-    background: rgba(238, 246, 255, 0.22);
+    background: rgba(30, 115, 190, 0.18);
     transform: translate(-50%, -50%);
   }
 

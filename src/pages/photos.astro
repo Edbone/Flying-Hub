@@ -32,7 +32,9 @@ try {
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a class="brand" href="/">EKAviates</a>
+        <a class="brand" href="/" aria-label="Eddie Jackson Aviation home">
+          <img src="/ekwx-logo.png" alt="Eddie Jackson Aviation logo" />
+        </a>
 
         <div class="nav-links">
           <a href="/">Home</a>
@@ -141,15 +143,15 @@ try {
 
 <style>
   :root {
-    --bg: #05080d;
-    --text: #eef6ff;
-    --muted: #a8b8c8;
+    --bg: #f7fbff;
+    --text: #17324d;
+    --muted: #5c738b;
     --blue: #1e73be;
     --blue-dark: #0b3f73;
-    --card: rgba(9, 16, 25, 0.84);
-    --line: rgba(238, 246, 255, 0.14);
-    --ink: #f7fbff;
-    --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    --card: rgba(255, 255, 255, 0.88);
+    --line: rgba(30, 115, 190, 0.14);
+    --ink: #07111f;
+    --shadow: 0 24px 70px rgba(26, 62, 96, 0.14);
   }
 
   * {
@@ -172,8 +174,8 @@ try {
     color: var(--text);
     background-color: var(--bg);
     background:
-      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
-      linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
+      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.16), transparent 30rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 247, 255, 0.9) 48%, rgba(232, 242, 252, 0.94) 100%),
       url("/topobackground.png");
     background-attachment: fixed;
     background-position: center;
@@ -186,7 +188,7 @@ try {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
+    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.16), transparent 42%);
     mask-image: linear-gradient(to bottom, black, transparent 82%);
   }
 
@@ -201,7 +203,7 @@ try {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(5, 8, 13, 0.86);
+    background: rgba(255, 255, 255, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(16px);
   }
@@ -217,11 +219,15 @@ try {
   }
 
   .brand {
-    color: var(--text);
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+  }
+
+  .brand img {
+    display: block;
+    width: auto;
+    height: clamp(68px, 6vw, 92px);
   }
 
   .nav-links {
@@ -302,7 +308,7 @@ try {
     gap: 2px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(5, 8, 13, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: var(--shadow);
     opacity: 0;
     pointer-events: none;
@@ -323,7 +329,7 @@ try {
   }
 
   .dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(30, 115, 190, 0.08);
     color: var(--text);
   }
 
@@ -358,7 +364,7 @@ try {
   .hero-text {
     max-width: 640px;
     margin: 18px 0 0;
-    color: #c7d5e2;
+    color: var(--muted);
     font-size: 1.08rem;
     line-height: 1.7;
   }
@@ -434,7 +440,7 @@ try {
     inset: 0;
     z-index: 1000;
     padding: 24px;
-    background: rgba(9, 14, 20, 0.88);
+    background: rgba(7, 17, 31, 0.72);
     justify-content: center;
     align-items: center;
   }

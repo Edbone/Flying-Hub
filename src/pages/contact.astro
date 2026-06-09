@@ -18,7 +18,9 @@ import Analytics from "@vercel/analytics/astro";
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a class="brand" href="/">Eddie Jackson</a>
+        <a class="brand" href="/" aria-label="Eddie Jackson Aviation home">
+          <img src="/ekwx-logo.png" alt="Eddie Jackson Aviation logo" />
+        </a>
 
         <div class="nav-links">
           <a href="/">Home</a>
@@ -86,15 +88,15 @@ These notes are a collection of the lessons, explanations, and references that h
 
 <style>
   :root {
-    --bg: #05080d;
-    --text: #eef6ff;
-    --muted: #a8b8c8;
+    --bg: #f7fbff;
+    --text: #17324d;
+    --muted: #5c738b;
     --blue: #1e73be;
     --blue-dark: #0b3f73;
-    --card: rgba(9, 16, 25, 0.84);
-    --line: rgba(238, 246, 255, 0.14);
-    --ink: #f7fbff;
-    --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    --card: rgba(255, 255, 255, 0.88);
+    --line: rgba(30, 115, 190, 0.14);
+    --ink: #07111f;
+    --shadow: 0 24px 70px rgba(26, 62, 96, 0.14);
   }
 
   * {
@@ -117,8 +119,8 @@ These notes are a collection of the lessons, explanations, and references that h
     color: var(--text);
     background-color: var(--bg);
     background:
-      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
-      linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
+      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.16), transparent 30rem),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 247, 255, 0.9) 48%, rgba(232, 242, 252, 0.94) 100%),
       url("/topobackground.png");
     background-attachment: fixed;
     background-position: center;
@@ -131,7 +133,7 @@ These notes are a collection of the lessons, explanations, and references that h
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
+    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.16), transparent 42%);
     mask-image: linear-gradient(to bottom, black, transparent 82%);
   }
 
@@ -146,7 +148,7 @@ These notes are a collection of the lessons, explanations, and references that h
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(5, 8, 13, 0.86);
+    background: rgba(255, 255, 255, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(16px);
   }
@@ -162,11 +164,15 @@ These notes are a collection of the lessons, explanations, and references that h
   }
 
   .brand {
-    color: var(--text);
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+  }
+
+  .brand img {
+    display: block;
+    width: auto;
+    height: clamp(68px, 6vw, 92px);
   }
 
   .nav-links {
@@ -247,7 +253,7 @@ These notes are a collection of the lessons, explanations, and references that h
     gap: 2px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(5, 8, 13, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: var(--shadow);
     opacity: 0;
     pointer-events: none;
@@ -268,7 +274,7 @@ These notes are a collection of the lessons, explanations, and references that h
   }
 
   .dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(30, 115, 190, 0.08);
     color: var(--text);
   }
 
@@ -310,7 +316,7 @@ These notes are a collection of the lessons, explanations, and references that h
   .intro {
     max-width: 590px;
     margin: 24px 0 0;
-    color: #c7d5e2;
+    color: var(--muted);
     font-size: clamp(1.05rem, 1.7vw, 1.2rem);
     line-height: 1.7;
   }
@@ -369,7 +375,7 @@ These notes are a collection of the lessons, explanations, and references that h
   .about-card p {
     max-width: 780px;
     margin: 22px 0 0;
-    color: #c7d5e2;
+    color: var(--muted);
     font-size: 1rem;
     line-height: 1.7;
   }
@@ -388,12 +394,12 @@ These notes are a collection of the lessons, explanations, and references that h
     min-height: 48px;
     padding: 0 20px;
     border-radius: 12px;
-    background: #eef6ff;
-    color: #07111f;
+    background: var(--blue);
+    color: white;
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 800;
-    box-shadow: 0 16px 32px rgba(11, 17, 23, 0.22);
+    box-shadow: 0 16px 32px rgba(30, 115, 190, 0.22);
     transition:
       transform 180ms ease,
       background 180ms ease,
@@ -413,7 +419,7 @@ These notes are a collection of the lessons, explanations, and references that h
     justify-self: end;
     overflow: hidden;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.82);
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
     backdrop-filter: blur(18px);

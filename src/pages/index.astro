@@ -17,7 +17,9 @@ import Analytics from "@vercel/analytics/astro";
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a class="brand" href="/">EKAviates</a>
+        <a class="brand" href="/" aria-label="EKAviates home">
+          <img src="/ekwx-logo.png" alt="EKAviates logo" />
+        </a>
 
         <div class="nav-links">
           <a href="/" aria-current="page">Home</a>
@@ -41,25 +43,38 @@ import Analytics from "@vercel/analytics/astro";
 
     <main>
       <section class="hero">
-        <img class="hero-logo" src="/ekwx-logo.png" alt="EKWX" />
-
         <div class="hero-copy">
-          <h1>Aviation Resources<br />& Live Tracking</h1>
-
-          <div class="course-strip" aria-label="Course areas">
-            <span>Private</span>
-            <span>Instrument</span>
-            <span>Commercial</span>
-          </div>
-
+          <h1>Training notes, student tools, and tracking.</h1>
         </div>
+      </section>
+
+      <section class="feature-grid" aria-label="Featured aviation resources">
+        <a class="feature-card" href="https://publish.obsidian.md/ekaviates/EKAviates">
+          <strong>EKAviates library</strong>
+          <span>Notes and study references from training.</span>
+        </a>
+
+        <a class="feature-card" href="https://wx.ekaviates.com/">
+          <strong>Radar & traffic</strong>
+          <span>Weather radar and nearby traffic in one place.</span>
+        </a>
+
+        <a class="feature-card" href="/flight-instruction">
+          <strong>Student tools</strong>
+          <span>Crosswind, weight and balance, density altitude, and the IO-360 3D model.</span>
+        </a>
+
+        <a class="feature-card" href="/photos">
+          <strong>Aviation photo library</strong>
+          <span>Aircraft, training moments, and flying milestones from the collection.</span>
+        </a>
       </section>
 
       <div class="iframe-pair">
         <section class="notes-preview" aria-labelledby="notes-preview-heading">
           <div class="section-heading">
             <div>
-              <p class="eyebrow"></p>
+              <p class="eyebrow">Reference library</p>
               <h2 id="notes-preview-heading">Aviation Notes</h2>
             </div>
           </div>
@@ -76,6 +91,7 @@ import Analytics from "@vercel/analytics/astro";
         <section class="radar-preview" aria-labelledby="radar-preview-heading">
           <div class="section-heading">
             <div>
+              <p class="eyebrow">Radar & Traffic</p>
               <h2 id="radar-preview-heading">Live Tracker</h2>
             </div>
           </div>
@@ -103,19 +119,20 @@ import Analytics from "@vercel/analytics/astro";
 
 <style>
 :root {
-  --bg: #05080d;
-  --paper: rgba(9, 16, 25, 0.84);
-  --text: #eef6ff;
-  --muted: #a8b8c8;
-  --line: rgba(238, 246, 255, 0.14);
+  --bg: #f7fbff;
+  --paper: rgba(255, 255, 255, 0.9);
+  --text: #18324d;
+  --muted: #5d7084;
+  --line: rgba(29, 95, 145, 0.16);
 
   --blue: #1e73be;
-  --blue-dark: #0b3f73;
-  --blue-soft: #d9ebfa;
+  --blue-dark: #103d67;
+  --teal: #167c8c;
+  --gold: #b9812b;
   --sky: #8fc7f5;
 
-  --ink: #f7fbff;
-  --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+  --ink: #07111f;
+  --shadow: 0 24px 70px rgba(26, 62, 96, 0.14);
 }
 
   * {
@@ -138,8 +155,8 @@ body {
   color: var(--text);
   background-color: var(--bg);
   background:
-    radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.34), transparent 30rem),
-    linear-gradient(135deg, rgba(5, 8, 13, 0.78) 0%, rgba(7, 15, 26, 0.82) 48%, rgba(3, 7, 12, 0.9) 100%),
+    linear-gradient(180deg, rgba(247, 251, 255, 0.82) 0%, rgba(247, 251, 255, 0.96) 58%),
+    linear-gradient(135deg, rgba(30, 115, 190, 0.12), rgba(22, 124, 140, 0.08) 38%, rgba(185, 129, 43, 0.08)),
     url("/topobackground.png");
   background-attachment: fixed;
   background-position: center;
@@ -152,7 +169,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(143, 199, 245, 0.08), transparent 42%);
+  background: linear-gradient(to bottom, rgba(143, 199, 245, 0.12), transparent 42%);
   mask-image: linear-gradient(to bottom, black, transparent 82%);
 }
 
@@ -167,7 +184,7 @@ body::before {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(5, 8, 13, 0.86);
+    background: rgba(255, 255, 255, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(16px);
   }
@@ -175,7 +192,7 @@ body::before {
   .nav {
     max-width: 1360px;
     margin: 0 auto;
-    padding: 18px 24px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -183,11 +200,15 @@ body::before {
   }
 
   .brand {
-    color: var(--text);
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
+  }
+
+  .brand img {
+    display: block;
+    width: auto;
+    height: clamp(68px, 6vw, 92px);
   }
 
   .nav-links {
@@ -267,7 +288,7 @@ body::before {
     gap: 2px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(5, 8, 13, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: var(--shadow);
     opacity: 0;
     pointer-events: none;
@@ -288,7 +309,7 @@ body::before {
   }
 
   .dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(30, 115, 190, 0.08);
     color: var(--text);
   }
 
@@ -296,30 +317,19 @@ body::before {
     position: relative;
     max-width: 1360px;
     margin: 0 auto;
-    padding: 36px 24px 88px;
+    padding: 48px 24px 88px;
   }
 
   .hero {
-    position: relative;
-    min-height: 180px;
     display: grid;
     align-items: start;
-    text-align: center;
-  }
-
-  .hero-logo {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: clamp(84px, 13vw, 150px);
-    height: auto;
-    display: block;
-    opacity: 0.9;
+    min-height: min(360px, calc(100vh - 150px));
+    text-align: left;
   }
 
   .hero-copy {
-    max-width: none;
-    padding-inline: clamp(96px, 15vw, 170px);
+    max-width: 980px;
+    padding-inline: 0;
   }
 
   .eyebrow {
@@ -334,17 +344,18 @@ body::before {
 h1 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(2.55rem, 5.625vw, 5.1rem);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
+  max-width: 960px;
+  font-size: clamp(2.7rem, 6vw, 5.9rem);
+  line-height: 0.94;
+  letter-spacing: 0;
 }
 
   .intro {
-    max-width: 540px;
-    margin: 20px auto 0;
-    color: #c7d5e2;
+    max-width: 680px;
+    margin: 24px 0 0;
+    color: var(--muted);
     font-size: clamp(1.05rem, 1.6vw, 1.22rem);
-    line-height: 1.65;
+    line-height: 1.6;
   }
 
   .buttons {
@@ -377,17 +388,18 @@ h1 {
   }
 
   .button.primary {
-    background: #eef6ff;
-    color: #07111f;
-    box-shadow: 0 16px 32px rgba(11, 17, 23, 0.22);
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 16px 32px rgba(30, 115, 190, 0.22);
   }
 
   .button.primary:hover {
     background: var(--blue-dark);
+    color: white;
   }
 
   .button.secondary {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.8);
     color: var(--ink);
     border: 1px solid var(--line);
   }
@@ -397,29 +409,53 @@ h1 {
     color: var(--blue);
   }
 
-  .course-strip {
-    margin-top: 24px;
-    padding-top: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+  .feature-grid {
+    margin-top: -58px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
   }
 
-  .course-strip span {
-    padding: 8px 12px;
+  .feature-card {
+    min-height: 172px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    color: #d6e4f0;
-    font-size: 0.78rem;
-    font-weight: 850;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.84);
+    color: var(--text);
+    text-decoration: none;
+    box-shadow: 0 18px 44px rgba(26, 62, 96, 0.1);
+    backdrop-filter: blur(16px);
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(22, 124, 140, 0.38);
+    box-shadow: 0 22px 52px rgba(26, 62, 96, 0.16);
+    transform: translateY(-2px);
+  }
+
+  .feature-card strong {
+    color: inherit;
+    font-size: clamp(1.28rem, 2vw, 1.72rem);
+    line-height: 1;
+  }
+
+  .feature-card span:last-child {
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.45;
   }
 
   .iframe-pair {
-    margin-top: 34px;
+    margin-top: 46px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
@@ -434,7 +470,6 @@ h1 {
     justify-content: center;
     text-align: center;
     gap: 24px;
-    border-bottom: 1px solid var(--line);
   }
 
   .section-heading .eyebrow {
@@ -467,7 +502,7 @@ h1 {
     width: 100%;
     height: 100%;
     border: 0;
-    background: #0b1118;
+    background: #f3f8fd;
   }
 
   .tracker-link {
@@ -484,10 +519,17 @@ h1 {
 
     .hero {
       text-align: center;
+      min-height: auto;
     }
 
-    .hero-copy {
-      padding-inline: clamp(80px, 15vw, 130px);
+    .hero-copy,
+    .intro {
+      margin-inline: auto;
+    }
+
+    .feature-grid {
+      margin-top: 34px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .iframe-pair {
@@ -505,6 +547,10 @@ h1 {
       align-items: flex-start;
       flex-direction: column;
       gap: 14px;
+    }
+
+    .brand img {
+      height: 68px;
     }
 
     .nav-links {
@@ -541,18 +587,8 @@ h1 {
     }
 
     h1 {
-      font-size: clamp(2.25rem, 12vw, 3.525rem);
-    }
-
-    .hero {
-      min-height: 0;
-      padding-top: 78px;
-    }
-
-    .hero-logo {
-      left: 50%;
-      width: 86px;
-      transform: translateX(-50%);
+      font-size: clamp(2.15rem, 10vw, 3.25rem);
+      line-height: 0.95;
     }
 
     .hero-copy {
@@ -561,6 +597,14 @@ h1 {
 
     .intro {
       font-size: 1rem;
+    }
+
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+      min-height: 142px;
     }
 
     .buttons {
