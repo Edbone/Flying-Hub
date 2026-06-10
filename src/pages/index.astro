@@ -42,15 +42,9 @@ import Analytics from "@vercel/analytics/astro";
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <h1>Training notes, student tools, and tracking.</h1>
-        </div>
-      </section>
-
       <section class="feature-grid" aria-label="Featured aviation resources">
         <a class="feature-card" href="https://publish.obsidian.md/ekaviates/EKAviates">
-          <strong>EKAviates library</strong>
+          <strong>Training Vault</strong>
           <span>Notes and study references from training.</span>
         </a>
 
@@ -342,17 +336,6 @@ body::before {
     padding: 48px 24px 88px;
   }
 
-  .hero {
-    display: grid;
-    align-items: start;
-    text-align: left;
-  }
-
-  .hero-copy {
-    max-width: 980px;
-    padding-inline: 0;
-  }
-
   .eyebrow {
     margin: 0 0 18px;
     color: var(--blue);
@@ -362,76 +345,8 @@ body::before {
     letter-spacing: 0.16em;
   }
 
-h1 {
-  margin: 0;
-  color: var(--ink);
-  max-width: 960px;
-  font-size: clamp(2.7rem, 6vw, 5.9rem);
-  line-height: 0.94;
-  letter-spacing: 0;
-}
-
-  .intro {
-    max-width: 680px;
-    margin: 24px 0 0;
-    color: var(--muted);
-    font-size: clamp(1.05rem, 1.6vw, 1.22rem);
-    line-height: 1.6;
-  }
-
-  .buttons {
-    margin-top: 34px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 20px;
-    border-radius: 999px;
-    font-size: 0.94rem;
-    font-weight: 850;
-    text-decoration: none;
-    transition:
-      transform 180ms ease,
-      box-shadow 180ms ease,
-      background 180ms ease,
-      color 180ms ease;
-  }
-
-  .button:hover {
-    transform: translateY(-2px);
-  }
-
-  .button.primary {
-    background: var(--blue);
-    color: white;
-    box-shadow: 0 16px 32px rgba(30, 115, 190, 0.22);
-  }
-
-  .button.primary:hover {
-    background: var(--blue-dark);
-    color: white;
-  }
-
-  .button.secondary {
-    background: rgba(255, 255, 255, 0.8);
-    color: var(--ink);
-    border: 1px solid var(--line);
-  }
-
-  .button.secondary:hover {
-    border-color: rgba(20, 94, 168, 0.38);
-    color: var(--blue);
-  }
-
   .feature-grid {
-    margin-top: 42px;
+    margin-top: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
@@ -538,18 +453,7 @@ h1 {
       padding-top: 34px;
     }
 
-    .hero {
-      text-align: center;
-      min-height: auto;
-    }
-
-    .hero-copy,
-    .intro {
-      margin-inline: auto;
-    }
-
     .feature-grid {
-      margin-top: 34px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -614,19 +518,6 @@ h1 {
       padding-inline: 18px;
     }
 
-    h1 {
-      font-size: clamp(2.15rem, 10vw, 3.25rem);
-      line-height: 0.95;
-    }
-
-    .hero-copy {
-      padding-inline: 0;
-    }
-
-    .intro {
-      font-size: 1rem;
-    }
-
     .feature-grid {
       grid-template-columns: 1fr;
     }
@@ -635,21 +526,9 @@ h1 {
       min-height: 142px;
     }
 
-    .buttons {
-      flex-direction: column;
-    }
-
-    .button {
-      width: 100%;
-    }
-
     .section-heading {
       align-items: flex-start;
       flex-direction: column;
-    }
-
-    .section-heading .button {
-      width: 100%;
     }
 
     .iframe-pair {
