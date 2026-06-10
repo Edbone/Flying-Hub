@@ -1,14 +1,46 @@
 ---
 import Analytics from "@vercel/analytics/astro";
 
+const projects = [
+  {
+    title: "Flight Line Dashboard",
+    url: "https://flightlinedemo.ekaviates.com/index.html",
+    description: "A fully integrated dispatch dashboard built for flight school operations, currently used at the school where I teach. Designed to centralize training notes, dispatch resources, and daily operational tools in one browser-based platform.",
+    tags: ["Training Notes", "Demo Site", "Aviation"],
+  },
+  {
+    title: "Radar & Traffic",
+    url: "https://wx.ekaviates.com/",
+    description: "A personal aviation coding project built to experiment with live weather, aircraft tracking, and map-based traffic displays. Designed as a fun way to explore real-time aviation data and flight-context visualization.",
+    tags: ["Weather", "Traffic", "Map UI"],
+  },
+  {
+    title: "Flight Line Status",
+    url: "https://eddie474.github.io/Flight-Line-Status-AOA/",
+    description: "A compact dispatch-style dashboard built to be viewed at the school's dispatch desk, summarizing runway, METAR, and flight condition information for quick go/no-go decision support.",
+    tags: ["METAR", "Decision Logic", "Dashboard"],
+  },
+  {
+    title: "Ground School Topic Schedule",
+    url: "https://eddie474.github.io/Ground-School-Topic-Schedule/",
+    description: "A dispatch-desk scheduling tool built for the school to organize ground school topics, lesson flow, and training blocks across multiple student groups.",
+    tags: ["Scheduling", "Ground School", "Training Ops"],
+  },
+  {
+    title: "AOA Attendance Calculator",
+    url: "https://eddie474.github.io/AOA_Attendance_Calculator/",
+    description: "A simple operations utility that quickly calculates student attendance totals for Academy of Aviation tracking workflows.",
+    tags: ["Calculator", "Attendance", "Operations"],
+  },
+];
 ---
 
 <html lang="en">
   <head>
-    <title>Contact | Eddie Jackson Aviation</title>
+    <title>Web-Based Aviation Tools | Eddie Jackson</title>
     <meta
       name="description"
-      content="Contact Eddie Jackson for aviation questions, training resources, flight instruction, and aviation collaboration."
+      content="Web-based aviation tools, dashboards, and training utilities built by Eddie Jackson."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -18,14 +50,14 @@ import Analytics from "@vercel/analytics/astro";
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a class="brand" href="/" aria-label="Eddie Jackson Aviation home">
-          <img src="/ekwx-logo.png" alt="Eddie Jackson Aviation logo" />
+        <a class="brand" href="/" aria-label="EKAviates home">
+          <img src="/ekwx-logo.png" alt="EKAviates logo" />
         </a>
 
         <div class="nav-links">
           <a href="/">Home</a>
           <a href="/photos">Photos</a>
-          <a href="/portfolio">Portfolio</a>
+          <a href="/portfolio" aria-current="page">Portfolio</a>
           <a href="https://publish.obsidian.md/ekaviates/EKAviates">Notes</a>
           <a href="https://wx.ekaviates.com/">Radar & Traffic</a>
           <details class="nav-dropdown">
@@ -38,51 +70,46 @@ import Analytics from "@vercel/analytics/astro";
             </div>
           </details>
           <a href="/flight-line">Flight Line</a>
-          <a href="/contact" aria-current="page">Contact</a>
+          <a href="/contact">Contact</a>
         </div>
       </nav>
     </header>
 
     <main>
-      <section class="contact-layout">
-        <div class="hero">
-          <p class="eyebrow">Contact</p>
+      <section class="page-heading" aria-labelledby="portfolio-heading">
+        <p class="eyebrow">Aviation Coding Portfolio</p>
+        <h1 id="portfolio-heading">Web-based aviation tools</h1>
+        <p>
+          A collection of browser-based tools, dashboards, and training utilities built for flight training and school operations.
+        </p>
+      </section>
 
-          <h1></h1>
+      <section class="project-grid" aria-label="Coding projects">
+        {projects.map((project) => (
+          <article class="project-card">
+            <div class="project-copy">
+              <div>
+                <h2>{project.title}</h2>
+                <p>{project.description}</p>
+              </div>
 
-          <p class="intro">
-
-          </p>
-
-          <section class="about-card" aria-labelledby="about-heading">
-            <span class="card-label">About Me</span>
-            <p>
-              I am a CFI, CFII, Commercial Multi-Engine Pilot, Advanced Ground Instructor, and Instrument Ground Instructor. I have over 250 hours of ground instruction experience and have been building this resource library since I first started flying.
-
-Aviation has been a major part of my life for over three years, both as a student and as an instructor. I have also worked in the management side of flight training as a Lead Student Support Representative, where I gained experience with student support, scheduling, and training operations.
-
-These notes are a collection of the lessons, explanations, and references that have helped me along the way. My goal is for them to help other pilots build confidence, understanding, and a strong foundation in aviation.
-            </p>
-          </section>
-
-          <section class="contact-card">
-            <div>
-              <span class="card-label">Email</span>
-              <h2>The easiest way to reach me</h2>
-              <p></p>
+              <div class="project-meta">
+                <div class="tag-list" aria-label={`${project.title} project tags`}>
+                  {project.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+                <a class="open-link" href={project.url}>Open Project</a>
+              </div>
             </div>
 
-            <a class="button" href="mailto:eddiekjackson3@gmail.com">
-              Email Me
-            </a>
-          </section>
-        </div>
-
-        <aside class="image-panel" aria-label="Portrait of Eddie Jackson">
-          <img src="/contact-portrait.png" alt="Eddie Jackson portrait" />
-        </aside>
+            <div class="embed-frame">
+              <iframe src={project.url} title={`${project.title} embedded preview`} loading="lazy"></iframe>
+              <a class="embed-open" href={project.url} aria-label={`Open ${project.title}`}></a>
+            </div>
+          </article>
+        ))}
       </section>
     </main>
+
     <Analytics />
   </body>
 </html>
@@ -90,12 +117,13 @@ These notes are a collection of the lessons, explanations, and references that h
 <style>
   :root {
     --bg: #f7fbff;
-    --text: #17324d;
-    --muted: #5c738b;
+    --paper: rgba(255, 255, 255, 0.9);
+    --text: #18324d;
+    --muted: #5d7084;
+    --line: rgba(29, 95, 145, 0.16);
     --blue: #1e73be;
-    --blue-dark: #0b3f73;
-    --card: rgba(255, 255, 255, 0.88);
-    --line: rgba(30, 115, 190, 0.14);
+    --blue-dark: #103d67;
+    --teal: #167c8c;
     --ink: #07111f;
     --shadow: 0 24px 70px rgba(26, 62, 96, 0.14);
   }
@@ -104,10 +132,10 @@ These notes are a collection of the lessons, explanations, and references that h
     box-sizing: border-box;
   }
 
-  html,
-  body {
+  html {
     min-height: 100%;
     background-color: var(--bg);
+    scroll-behavior: smooth;
   }
 
   body {
@@ -118,15 +146,13 @@ These notes are a collection of the lessons, explanations, and references that h
       Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
     color: var(--text);
-    background-color: var(--bg);
     background:
-      radial-gradient(circle at 18% 8%, rgba(30, 115, 190, 0.16), transparent 30rem),
-      linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 247, 255, 0.9) 48%, rgba(232, 242, 252, 0.94) 100%),
+      linear-gradient(180deg, rgba(247, 251, 255, 0.82) 0%, rgba(247, 251, 255, 0.96) 58%),
+      linear-gradient(135deg, rgba(30, 115, 190, 0.12), rgba(22, 124, 140, 0.08) 38%, rgba(185, 129, 43, 0.08)),
       url("/topobackground.png");
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
-    background-color: var(--bg);
   }
 
   body::before {
@@ -134,7 +160,7 @@ These notes are a collection of the lessons, explanations, and references that h
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.16), transparent 42%);
+    background: linear-gradient(to bottom, rgba(143, 199, 245, 0.12), transparent 42%);
     mask-image: linear-gradient(to bottom, black, transparent 82%);
   }
 
@@ -196,8 +222,8 @@ These notes are a collection of the lessons, explanations, and references that h
 
   .nav-links a:hover,
   .nav-links a[aria-current="page"],
-  .nav-dropdown summary:hover,
-  .nav-dropdown summary[aria-current="page"] {
+  .nav-dropdown summary[aria-current="page"],
+  .nav-dropdown summary:hover {
     color: var(--blue);
   }
 
@@ -215,20 +241,6 @@ These notes are a collection of the lessons, explanations, and references that h
       0 0 8px rgba(0, 217, 255, 0.95),
       0 0 18px rgba(0, 217, 255, 0.8),
       0 0 32px rgba(0, 217, 255, 0.42);
-    transform-origin: left;
-    animation: navGlowIn 650ms ease-out both;
-  }
-
-  @keyframes navGlowIn {
-    from {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-
-    to {
-      opacity: 1;
-      transform: scaleX(1);
-    }
   }
 
   .nav-dropdown {
@@ -299,6 +311,149 @@ These notes are a collection of the lessons, explanations, and references that h
     white-space: nowrap;
   }
 
+  main {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 42px 24px 88px;
+  }
+
+  .page-heading {
+    max-width: 760px;
+    margin-bottom: 26px;
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: var(--blue);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(2.3rem, 5vw, 4.7rem);
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .page-heading p:last-child {
+    max-width: 680px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.55;
+  }
+
+  .project-grid {
+    display: grid;
+    gap: 24px;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+    min-height: 420px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+  }
+
+  .project-copy {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+    border-right: 1px solid var(--line);
+  }
+
+  h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .project-copy p {
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .project-meta {
+    display: grid;
+    gap: 18px;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag-list span {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text);
+    font-size: 0.74rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .open-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 8px;
+    background: var(--blue);
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 850;
+    box-shadow: 0 14px 28px rgba(30, 115, 190, 0.2);
+  }
+
+  .open-link:hover {
+    background: var(--blue-dark);
+  }
+
+  .embed-frame {
+    position: relative;
+    min-height: 420px;
+    background: #f3f8fd;
+  }
+
+  .embed-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+    background: #f3f8fd;
+  }
+
+  .embed-open {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
+  }
+
   @media (max-width: 980px) {
     .nav {
       padding: 12px 18px;
@@ -318,176 +473,14 @@ These notes are a collection of the lessons, explanations, and references that h
     .nav-dropdown summary {
       font-size: 0.86rem;
     }
-  }
 
-  main {
-    position: relative;
-    max-width: 1360px;
-    margin: 0 auto;
-    padding: 68px 24px 88px;
-  }
-
-  .contact-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
-    gap: 56px;
-    align-items: center;
-  }
-
-  .hero {
-    max-width: 680px;
-  }
-
-  .eyebrow {
-    margin: 0 0 18px;
-    color: var(--blue);
-    font-size: 0.78rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-  }
-
-  h1 {
-    margin: 0;
-    color: var(--ink);
-    font-size: clamp(3.4rem, 7.5vw, 6.8rem);
-    line-height: 0.94;
-    letter-spacing: -0.045em;
-  }
-
-  .intro {
-    max-width: 590px;
-    margin: 24px 0 0;
-    color: var(--muted);
-    font-size: clamp(1.05rem, 1.7vw, 1.2rem);
-    line-height: 1.7;
-  }
-
-  .contact-card {
-    margin-top: 38px;
-    padding: 30px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    border-radius: 18px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-    backdrop-filter: blur(18px);
-  }
-
-  .about-card {
-    margin-top: 34px;
-    padding: 30px;
-    border-radius: 18px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-    backdrop-filter: blur(18px);
-  }
-
-  .card-label {
-    display: block;
-    margin-bottom: 12px;
-    color: var(--blue);
-    font-size: 0.76rem;
-    font-weight: 850;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-  }
-
-  .contact-card h2 {
-    margin: 0 0 10px;
-    color: var(--ink);
-    font-size: 1.45rem;
-    line-height: 1.1;
-    letter-spacing: -0.04em;
-  }
-
-  .about-card h2 {
-    max-width: 720px;
-    margin: 0;
-    color: var(--ink);
-    font-size: clamp(1.75rem, 3vw, 2.6rem);
-    line-height: 1.06;
-    letter-spacing: -0.04em;
-  }
-
-  .about-card p {
-    max-width: 780px;
-    margin: 22px 0 0;
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  .contact-card p {
-    margin: 0;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-
-  .button {
-    flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 20px;
-    border-radius: 12px;
-    background: var(--blue);
-    color: white;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 800;
-    box-shadow: 0 16px 32px rgba(30, 115, 190, 0.22);
-    transition:
-      transform 180ms ease,
-      background 180ms ease,
-      box-shadow 180ms ease;
-  }
-
-  .button:hover {
-    transform: translateY(-2px);
-    background: var(--blue-dark);
-    color: white;
-    box-shadow: 0 16px 30px rgba(21, 91, 152, 0.3);
-  }
-
-  .image-panel {
-    width: 100%;
-    max-width: 430px;
-    justify-self: end;
-    overflow: hidden;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.82);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(18px);
-  }
-
-  .image-panel img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  @media (max-width: 900px) {
-    main {
-      padding-top: 48px;
-    }
-
-    .contact-layout {
+    .project-card {
       grid-template-columns: 1fr;
-      gap: 38px;
     }
 
-    .image-panel {
-      max-width: 390px;
-      justify-self: start;
+    .project-copy {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
     }
   }
 
@@ -537,23 +530,18 @@ These notes are a collection of the lessons, explanations, and references that h
       transform: translate(-50%, 0);
     }
 
-    h1 {
-      font-size: clamp(3rem, 17vw, 4.6rem);
+    main {
+      padding: 30px 18px 72px;
     }
 
-    .contact-card {
-      padding: 26px;
-      flex-direction: column;
-      align-items: flex-start;
+    .project-card,
+    .embed-frame,
+    .embed-frame iframe {
+      min-height: 360px;
     }
 
-    .button {
-      width: 100%;
-    }
-
-    .image-panel {
-      max-width: 100%;
-      border-radius: 16px;
+    .project-copy {
+      padding: 20px;
     }
   }
 </style>
