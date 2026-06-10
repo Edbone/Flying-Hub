@@ -77,8 +77,8 @@ These notes are a collection of the lessons, explanations, and references that h
           </section>
         </div>
 
-        <aside class="image-panel" aria-label="Eddie Jackson contact information">
-          <img src="/Contactinfopic.png" alt="Eddie Jackson contact information" />
+        <aside class="image-panel" aria-label="Portrait of Eddie Jackson">
+          <img src="/contact-portrait.png" alt="Eddie Jackson portrait" />
         </aside>
       </section>
     </main>
@@ -436,7 +436,7 @@ These notes are a collection of the lessons, explanations, and references that h
 
   .image-panel {
     width: 100%;
-    max-width: 390px;
+    max-width: 430px;
     justify-self: end;
     overflow: hidden;
     border-radius: 18px;
@@ -449,8 +449,9 @@ These notes are a collection of the lessons, explanations, and references that h
   .image-panel img {
     display: block;
     width: 100%;
-    aspect-ratio: 970 / 1194;
-    object-fit: contain;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center top;
   }
 
   @media (max-width: 900px) {
