@@ -111,6 +111,25 @@ import Analytics from "@vercel/analytics/astro";
           </div>
         </section>
       </div>
+
+      <section class="model-preview" aria-labelledby="model-preview-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Interactive aircraft study</p>
+            <h2 id="model-preview-heading">Lycoming IO-360 3D Model</h2>
+          </div>
+        </div>
+
+        <div class="model-frame">
+          <iframe
+            src="https://scaniverse.com/scan/idwyj4cfuuj6r3ou?embed=1"
+            title="Interactive 3D model of a Lycoming IO-360 engine"
+            loading="lazy"
+            allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
     </main>
 
     <Analytics />
@@ -424,6 +443,10 @@ body::before {
     gap: 24px;
   }
 
+  .model-preview {
+    margin-top: 46px;
+  }
+
   .section-heading {
     margin-bottom: 24px;
     min-height: 82px;
@@ -448,7 +471,8 @@ body::before {
   }
 
   .radar-frame,
-  .notes-frame {
+  .notes-frame,
+  .model-frame {
     position: relative;
     overflow: hidden;
     height: clamp(520px, 68vh, 680px);
@@ -460,12 +484,17 @@ body::before {
   }
 
   .radar-frame iframe,
-  .notes-frame iframe {
+  .notes-frame iframe,
+  .model-frame iframe {
     display: block;
     width: 100%;
     height: 100%;
     border: 0;
     background: #f3f8fd;
+  }
+
+  .model-frame {
+    height: clamp(620px, 80vh, 860px);
   }
 
   .tracker-link {
@@ -488,8 +517,13 @@ body::before {
       margin-top: 32px;
     }
 
+    .model-preview {
+      margin-top: 32px;
+    }
+
     .radar-frame,
-    .notes-frame {
+    .notes-frame,
+    .model-frame {
       height: 620px;
     }
   }
@@ -563,7 +597,8 @@ body::before {
     }
 
     .radar-frame,
-    .notes-frame {
+    .notes-frame,
+    .model-frame {
       height: 560px;
     }
 
