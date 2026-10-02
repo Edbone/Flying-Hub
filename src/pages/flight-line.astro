@@ -7,6 +7,7 @@ import Analytics from "@vercel/analytics/astro";
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>Flight Line Status</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -604,6 +605,7 @@ import Analytics from "@vercel/analytics/astro";
     <nav class="nav">
       <a class="brand" href="/" aria-label="Eddie Jackson Aviation home">
         <img src="/ekwx-logo.png" alt="Eddie Jackson Aviation logo" />
+        <strong>EKAviates</strong>
       </a>
 
       <div class="nav-links">
@@ -621,9 +623,12 @@ import Analytics from "@vercel/analytics/astro";
               <a href="https://scaniverse.com/scan/idwyj4cfuuj6r3ou" target="_blank" rel="noreferrer">3D Model IO 360</a>
             </div>
           </details>
-        <a href="/flight-line" aria-current="page">Flight Line</a>
         <a href="/contact">Contact</a>
       </div>
+      <details class="mobile-nav">
+        <summary aria-label="Open navigation"><span></span><span></span><span></span></summary>
+        <div class="mobile-menu"><a href="/">Home</a><a href="/photos">Photos</a><a href="/portfolio">Portfolio</a><a href="/notes">Notes</a><a href="https://wx.ekaviates.com/">Radar & Traffic</a><a href="/flight-instruction">Student Tools</a><a href="/contact">Contact</a></div>
+      </details>
     </nav>
   </header>
 

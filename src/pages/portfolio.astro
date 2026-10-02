@@ -43,6 +43,7 @@ const projects = [
 
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <title>Web-Based Aviation Tools | Eddie Jackson</title>
     <meta
       name="description"
@@ -59,6 +60,7 @@ const projects = [
       <nav class="nav">
         <a class="brand" href="/" aria-label="EKAviates home">
           <img src="/ekwx-logo.png" alt="EKAviates logo" />
+          <strong>EKAviates</strong>
         </a>
 
         <div class="nav-links">
@@ -76,9 +78,12 @@ const projects = [
               <a href="https://scaniverse.com/scan/idwyj4cfuuj6r3ou" target="_blank" rel="noreferrer">3D Model IO 360</a>
             </div>
           </details>
-          <a href="/flight-line">Flight Line</a>
           <a href="/contact">Contact</a>
         </div>
+        <details class="mobile-nav">
+          <summary aria-label="Open navigation"><span></span><span></span><span></span></summary>
+          <div class="mobile-menu"><a href="/">Home</a><a href="/photos">Photos</a><a href="/portfolio" aria-current="page">Portfolio</a><a href="/notes">Notes</a><a href="https://wx.ekaviates.com/">Radar & Traffic</a><a href="/flight-instruction">Student Tools</a><a href="/contact">Contact</a></div>
+        </details>
       </nav>
     </header>
 
