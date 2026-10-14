@@ -51,13 +51,15 @@ import Analytics from "@vercel/analytics/astro";
 
     <main>
       <section class="contact-layout">
-        <div class="hero">
+        <div class="contact-heading">
           <h1>Let’s talk aviation.</h1>
 
           <p class="intro">
             Questions about training, aviation tools, or a project? I’d be glad to hear from you.
           </p>
+        </div>
 
+        <div class="contact-content">
           <section class="about-card" aria-labelledby="about-heading">
             <p>
               I am a Cirrus Training Center Instructor, CFI, CFII, Commercial Multi-Engine Pilot, Advanced Ground Instructor, and Instrument Ground Instructor. I have over 500 hours of ground instruction experience and have been building this resource library since I first started flying.
@@ -331,13 +333,25 @@ These notes are a collection of the lessons, explanations, and references that h
 
   .contact-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 390px);
-    gap: 56px;
-    align-items: center;
+    grid-template-columns: minmax(0, 680px) minmax(300px, 390px);
+    grid-template-areas:
+      "heading heading"
+      "content portrait";
+    column-gap: 56px;
+    row-gap: 34px;
+    align-items: start;
+    justify-content: space-between;
   }
 
-  .hero {
+  .contact-heading {
+    grid-area: heading;
     max-width: 680px;
+  }
+
+  .contact-content {
+    grid-area: content;
+    display: grid;
+    gap: 32px;
   }
 
   .eyebrow {
@@ -366,7 +380,6 @@ These notes are a collection of the lessons, explanations, and references that h
   }
 
   .contact-card {
-    margin-top: 38px;
     padding: 30px;
     display: flex;
     align-items: flex-end;
@@ -380,7 +393,6 @@ These notes are a collection of the lessons, explanations, and references that h
   }
 
   .about-card {
-    margin-top: 34px;
     padding: 30px;
     border-radius: 18px;
     background: var(--card);
@@ -458,6 +470,7 @@ These notes are a collection of the lessons, explanations, and references that h
   }
 
   .image-panel {
+    grid-area: portrait;
     width: 100%;
     max-width: 430px;
     justify-self: end;
@@ -484,6 +497,10 @@ These notes are a collection of the lessons, explanations, and references that h
 
     .contact-layout {
       grid-template-columns: 1fr;
+      grid-template-areas:
+        "heading"
+        "portrait"
+        "content";
       gap: 38px;
     }
 
