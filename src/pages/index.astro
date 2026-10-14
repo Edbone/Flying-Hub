@@ -67,12 +67,16 @@ try {
           </div>
         </div>
         <div class="hero-flight-image" aria-hidden="true">
-          {latestPhotos[0] ? (
-            <img
-              id="hero-latest-image"
-              src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1400/${latestPhotos[0].public_id}.${latestPhotos[0].format}`}
-              alt=""
-            />
+          {latestPhotos.length ? (
+            latestPhotos.map((photo, index) => (
+              <img
+                class:list={["hero-slide", index === 0 && "is-active"]}
+                src={`https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1800/${photo.public_id}.${photo.format}`}
+                alt=""
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchpriority={index === 0 ? "high" : "auto"}
+              />
+            ))
           ) : (
             <div class="image-fallback"></div>
           )}
@@ -147,6 +151,55 @@ try {
       const cloudName = "dnjzeouq5";
       const imageUrl = (photo, width) => `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_${width}/${photo.public_id}.${photo.format}`;
       const photoAlt = (publicId) => publicId.split("/").pop().replaceAll("_", " ").replace(/\s[a-z0-9]{6}$/i, "");
+      const heroFrame = document.querySelector(".hero-flight-image");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let heroIndex = 0;
+      let heroTimer;
+
+      function showHeroSlide(index) {
+        if (!heroFrame) return;
+        const slides = [...heroFrame.querySelectorAll(".hero-slide")];
+        if (!slides.length) return;
+        heroIndex = (index + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => slide.classList.toggle("is-active", slideIndex === heroIndex));
+      }
+
+      function startHeroRotation() {
+        window.clearInterval(heroTimer);
+        if (!heroFrame || reduceMotion.matches) return;
+        const slides = heroFrame.querySelectorAll(".hero-slide");
+        if (slides.length < 2) return;
+        heroTimer = window.setInterval(() => showHeroSlide(heroIndex + 1), 6000);
+      }
+
+      function updateHeroPhotos(photos) {
+        if (!heroFrame) return;
+        const fallback = heroFrame.querySelector(".image-fallback");
+        if (fallback) fallback.remove();
+
+        const existingSlides = [...heroFrame.querySelectorAll(".hero-slide")];
+        while (existingSlides.length < photos.length) {
+          const image = document.createElement("img");
+          image.className = "hero-slide";
+          image.alt = "";
+          heroFrame.appendChild(image);
+          existingSlides.push(image);
+        }
+
+        existingSlides.forEach((image, index) => {
+          const photo = photos[index];
+          if (!photo) {
+            image.remove();
+            return;
+          }
+          image.src = imageUrl(photo, 1800);
+          image.loading = index === 0 ? "eager" : "lazy";
+          image.fetchPriority = index === 0 ? "high" : "auto";
+        });
+
+        showHeroSlide(0);
+        startHeroRotation();
+      }
 
       async function refreshLatestPhotos() {
         try {
@@ -156,8 +209,7 @@ try {
           const photos = (data.resources ?? []).sort((a, b) => b.version - a.version).slice(0, 5);
           if (!photos.length) return;
 
-          const heroImage = document.getElementById("hero-latest-image");
-          if (heroImage) heroImage.src = imageUrl(photos[0], 1800);
+          updateHeroPhotos(photos);
 
           const strip = document.getElementById("home-photo-strip");
           if (!strip) return;
@@ -174,7 +226,10 @@ try {
         }
       }
 
+      startHeroRotation();
       refreshLatestPhotos();
+      window.setInterval(refreshLatestPhotos, 60000);
+      reduceMotion.addEventListener("change", startHeroRotation);
     </script>
   </body>
 </html>
@@ -217,7 +272,9 @@ try {
   .credentials span { padding:8px 11px; border:1px solid var(--line); border-radius:999px; color:var(--muted); background:rgba(255,255,255,.55); font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
   .hero-flight-image { position:absolute; inset:0 0 0 35%; z-index:-2; overflow:hidden; background:#dbe7f0; }
   .hero-flight-image::after { content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(7,17,31,.08));pointer-events:none; }
-  .hero-flight-image img,.image-fallback { width:100%;height:100%;display:block;object-fit:cover; }
+  .hero-flight-image :global(.hero-slide) { position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;opacity:0;transition:opacity 1.1s cubic-bezier(.2,.7,.2,1); }
+  .hero-flight-image :global(.hero-slide.is-active) { opacity:1; }
+  .image-fallback { width:100%;height:100%;display:block;object-fit:cover; }
   .image-fallback { background:linear-gradient(145deg,var(--blue-dark),var(--teal)),url("/topobackground.png") center/cover; }
   .photo-feature { max-width:1840px; margin:auto; padding:82px clamp(24px,4vw,72px) 110px; }
   .section-heading { margin-bottom:38px; display:flex; align-items:end; justify-content:space-between; gap:36px; }
