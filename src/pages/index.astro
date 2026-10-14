@@ -65,9 +65,6 @@ try {
             <a class="button primary" href="/flight-instruction">Explore student tools</a>
             <a class="button secondary" href="/photos">View photography</a>
           </div>
-          <div class="credentials" aria-label="Credentials">
-            <span>CFI / CFII</span><span>Cirrus TCI</span><span>Commercial Multi</span>
-          </div>
         </div>
         <div class="hero-flight-image" aria-hidden="true">
           {latestPhotos[0] ? (
@@ -84,7 +81,7 @@ try {
 
       <section class="photo-feature" aria-labelledby="photo-heading" data-reveal>
         <div class="section-heading">
-          <div><p class="eyebrow">From the flight deck</p><h2 id="photo-heading">Aviation, up close.</h2></div>
+          <div><h2 id="photo-heading">Aviation, up close.</h2></div>
           <a href="/photos">View the full photo library</a>
         </div>
         {latestPhotos.length > 0 ? (
@@ -106,11 +103,9 @@ try {
 
       <section class="radar-section" aria-labelledby="radar-heading" data-reveal>
         <div class="radar-copy">
-          <p class="eyebrow">Live radar & traffic</p>
           <h2 id="radar-heading">The whole picture,<br />right now.</h2>
           <p>Current weather radar and nearby aircraft in one focused, pilot-friendly view.</p>
           <a class="button radar-button" href="https://wx.ekaviates.com/">Open full-screen tracker</a>
-          <span class="live-status"><i></i> Live data</span>
         </div>
         <a class="radar-window" href="https://wx.ekaviates.com/" aria-label="Open the full radar and traffic tracker">
           <iframe src="https://wx.ekaviates.com/" title="Live EKAviates radar and traffic tracker" loading="lazy" tabindex="-1"></iframe>
@@ -120,11 +115,11 @@ try {
 
       <section class="feature-grid" data-reveal>
         <a class="feature feature-notes" href="/notes">
-          <p class="eyebrow">Training Vault</p><h2>Learn the why.</h2>
+          <h2>Learn the why.</h2>
           <span>Notes and explanations built from real instruction.</span><strong>Browse aviation notes</strong>
         </a>
         <a class="feature feature-portfolio" href="/portfolio">
-          <p class="eyebrow">Aviation Portfolio</p><h2>Tools built to fly.</h2>
+          <h2>Tools built to fly.</h2>
           <span>Dashboards and utilities designed for flight training and school operations.</span><strong>View aviation projects</strong>
         </a>
       </section>
